@@ -16,7 +16,7 @@ All configurable paramaters are in values.yaml
 
 - Logging and logging-crd applications (CR) must be installed
 - Elastic-search must be installed
-- Secret with name "es1-es-elastic-user" with key "elastic" containing password to elastic server must be created in "cattle-logging-system" (so fluentd will be able to login and send data to elastic) -> 
+- Secret with name "es1-es-elastic-user" with key "elastic" containing password to elastic server must be created in "cattle-logging-system" (so fluentd will be able to login and send data to elastic):
 
 ```yaml
 apiVersion: v1
