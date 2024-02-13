@@ -1,5 +1,5 @@
 apiVersion: v2
-name: Rancher Active Directory Auth Provider Configuration
+name: active-directory-auth-provider
 description: A Chart to enable Rancher Active Directory Auth Provider & Enable Global Role Binding for Admin group
 version: 1.0.0
 keywords:

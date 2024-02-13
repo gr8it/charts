@@ -1,0 +1,8 @@
+apiVersion: v2
+name: cilium-egress-gtw-ips
+description: A Chart to setup per namespace egress IP using CiliumEgressGatewayPolicies
+version: 1.0.0
+keywords:
+  - rancher
+  - cilium
+  - egress

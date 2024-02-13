@@ -30,6 +30,8 @@ helm template klaster https://raw.githubusercontent.com/gr8it/charts/main/cluste
 
 Please, use [Makefile](./scripts/Makefile)
 
+> Don't forget to update helm chart version in Chart.yaml! Otherwise existing version will be replaced!
+
 ```bash
 make -C scripts/ build
 ```
