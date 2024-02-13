@@ -23,8 +23,10 @@
 Refer to Helm chart package using url, e.g.:
 
 ```txt
-helm template klaster https://raw.githubusercontent.com/gr8it/charts/main/cluster-template-1.0.3.tgz
+helm template ad https://github.com/gr8it/charts/raw/main/active-directory-auth-provider-1.0.0.tgz
 ```
+
+> Note: to get the URL, navigate to this repo on github.com, select particular chart, right click raw icon and select Copy link address (or similar)
 
 ## Build a new helm chart package
 
