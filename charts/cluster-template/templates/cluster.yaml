@@ -1,0 +1,282 @@
+apiVersion: provisioning.cattle.io/v1
+kind: Cluster
+metadata:
+  {{- if .Values.cluster.labels }}
+  labels:
+{{ toYaml .Values.cluster.labels | indent 4 }}
+  {{- end }}
+  {{- if .Values.cluster.annotations }}
+  annotations:
+{{ toYaml .Values.cluster.annotations | indent 4 }}
+  {{- end }}
+  name: {{ .Values.cluster.name }}
+  namespace: fleet-default
+spec:
+  {{- if .Values.agentEnvs }}
+  agentEnvVars:
+{{ toYaml .Values.agentEnvs | indent 4 }}
+  {{- end }}
+  {{- if .Values.cloudCredentialSecretName }}
+  cloudCredentialSecretName: {{ .Values.cloudCredentialSecretName }}
+  {{- end }}
+  {{- if .Values.defaultPodSecurityAdmissionConfigurationTemplateName }}
+  defaultPodSecurityAdmissionConfigurationTemplateName: {{ .Values.defaultPodSecurityAdmissionConfigurationTemplateName }}
+  {{- end }}  
+  {{- if .Values.defaultPodSecurityPolicyTemplateName }} 
+  defaultPodSecurityPolicyTemplateName: {{ .Values.defaultPodSecurityPolicyTemplateName }} 
+  {{- end }}  
+  {{- if .Values.fleetAgentDeploymentCustomization }}
+  fleetAgentDeploymentCustomization:  {{ .Values.fleetAgentDeploymentCustomization }}   
+  {{- end }}  
+  {{- if .Values.kubernetesVersion }}  
+  kubernetesVersion: {{ .Values.kubernetesVersion }}
+  {{- end }}
+  {{- if .Values.rkeConfig.localClusterAuthEndpoint.enabled }}
+  localClusterAuthEndpoint:
+    enabled: {{ .Values.rkeConfig.localClusterAuthEndpoint.enabled }}
+    {{- if .Values.rkeConfig.localClusterAuthEndpoint.fqdn }}
+    fqdn: {{ .Values.rkeConfig.localClusterAuthEndpoint.fqdn }}
+    {{- end }}
+    {{- if .Values.rkeConfig.localClusterAuthEndpoint.caCerts }}
+    caCerts: {{ .Values.rkeConfig.localClusterAuthEndpoint.caCerts }}
+    {{- end }}
+  {{- end }}
+  {{- if .Values.enableNetworkPolicy }}  
+  # enable network policy, project isolation
+  enableNetworkPolicy: {{ .Values.enableNetworkPolicy }}
+  {{- end }}
+  # specify rancher helm chart values deployed into downstream cluster
+  # rancherValues: {}
+  rkeConfig:
+    #
+    # all possible values are liste here https://docs.rke2.io/reference/server_config
+    #
+    #
+    #
+    {{- if ne .Values.cloudprovider "custom" }}
+    machinePools:
+    {{- if .Values.nodepools }} {{ range $index, $nodepool := .Values.nodepools }}
+    - controlPlaneRole: {{ $nodepool.controlplane }}
+      etcdRole: {{ $nodepool.etcd }}
+      workerRole: {{ $nodepool.worker }}
+      quantity: {{ $nodepool.quantity }}
+      name: {{ $nodepool.name }}
+      {{- if $nodepool.labels }}
+      labels:
+{{ toYaml $nodepool.labels | indent 8 }}
+      {{- end }}      
+      {{- if $nodepool.taints }}
+      taints:
+{{ toYaml $nodepool.taints | indent 8 }}
+      {{- end }}         
+      machineConfigRef:
+        {{- if eq $.Values.cloudprovider "amazonec2" }}
+        kind: Amazonec2Config
+        {{- else if eq $.Values.cloudprovider "vsphere" }}
+        kind: VmwarevsphereConfig
+        {{- else if eq $.Values.cloudprovider "harvester" }}
+        kind: HarvesterConfig
+        {{- else if eq $.Values.cloudprovider "digitalocean" }}
+        kind: DigitaloceanConfig
+        {{- else if eq $.Values.cloudprovider "azure" }}
+        kind: AzureConfig
+        {{- end}}
+        name: {{ $nodepool.name }}
+      displayName: {{ $nodepool.displayName }}
+      {{- if $nodepool.rollingUpdate }}
+      rollingUpdate:
+        maxUnavailable: {{ $nodepool.rollingUpdate.maxUnavailable }}
+        maxSurge: {{ $nodepool.rollingUpdate.maxSurge }}
+      {{- end }}
+      {{- if $nodepool.machineDeploymentLabels }}
+      machineDeploymentLabels:
+{{ toYaml $nodepool.machineDeploymentLabels | indent 8 }}
+      {{- end }}
+      {{- if $nodepool.machineDeploymentAnnotations }}
+      machineDeploymentAnnotations:
+{{ toYaml $nodepool.machineDeploymentAnnotations | indent 8 }}
+      {{- end }}
+      {{- end }}
+    {{- end }}
+    {{- if .Values.nodepool }}
+    {{ $nodepool := .Values.nodepool }}
+    - controlPlaneRole: {{ $nodepool.controlplane }}
+      etcdRole: {{ $nodepool.etcd }}
+      workerRole: {{ $nodepool.worker }}
+      quantity: {{ $nodepool.quantity }}
+      name: {{ $nodepool.name }}
+      {{- if $nodepool.labels }}
+      labels:
+{{ toYaml $nodepool.labels | indent 8 }}
+      {{- end }}
+      {{- if $nodepool.taints }}
+      taints:
+{{ toYaml $nodepool.taints | indent 8 }}
+      {{- end }}        
+      machineConfigRef:
+        {{- if eq $.Values.cloudprovider "amazonec2" }}
+        kind: Amazonec2Config
+        {{- else if eq $.Values.cloudprovider "vsphere" }}
+        kind: VmwarevsphereConfig
+        {{- else if eq $.Values.cloudprovider "harvester" }}
+        kind: HarvesterConfig
+        {{- else if eq $.Values.cloudprovider "digitalocean" }}
+        kind: DigitaloceanConfig
+        {{- else if eq $.Values.cloudprovider "azure" }}
+        kind: AzureConfig
+        {{- end}}
+        name: {{ $nodepool.name }}
+      displayName: {{ $nodepool.displayName }}
+      {{- if $nodepool.rollingUpdate }}
+      rollingUpdate:
+        maxUnavailable: {{ $nodepool.rollingUpdate.maxUnavailable }}
+        maxSurge: {{ $nodepool.rollingUpdate.maxSurge }}
+      {{- end }}
+      {{- if $nodepool.machineDeploymentLabels }}
+      machineDeploymentLabels:
+{{ toYaml $nodepool.machineDeploymentLabels | indent 8 }}
+      {{- end }}
+      {{- if $nodepool.machineDeploymentAnnotations }}
+      machineDeploymentAnnotations:
+{{ toYaml $nodepool.machineDeploymentAnnotations | indent 8 }}
+      {{- end }}
+    {{- end }}
+    {{- end }}
+    {{- if .Values.rkeConfig.chartValues }}
+    chartValues: 
+{{ toYaml .Values.rkeConfig.chartValues | indent 6 }}
+    {{- end }}
+    etcd:
+      # Disable automatic etcd snapshots
+      {{- if .Values.rkeConfig.etcd.disableSnapshots }}
+      disableSnapshots: {{ .Values.rkeConfig.etcd.disableSnapshots }}
+      {{- end }}
+      # Directory to save db snapshots. (Default location: ${data-dir}/db/snapshots)
+      {{- if .Values.rkeConfig.etcd.etcdSnapshotDir }}
+      etcd-snapshot-dir: {{ .Values.rkeConfig.etcd.etcdSnapshotDir }}
+      {{- end }}
+      # Set the base name of etcd snapshots. Default: etcd-snapshot-<unix-timestamp> (default: "etcd-snapshot")
+      {{- if .Values.rkeConfig.etcd.etcdSnapshotName }}
+      etcd-snapshot-name: {{ .Values.rkeConfig.etcd.etcdSnapshotName }}
+      {{- end }}
+      # Number of snapshots to retain (default: 5)
+      snapshotRetention: {{ .Values.rkeConfig.etcd.snapshotRetention }}
+      # Snapshot interval time in cron spec. eg. every 5 hours '* */5 * * *' (default: "* */5 * * *")
+      snapshotScheduleCron: {{ .Values.rkeConfig.etcd.snapshotScheduleCron }}
+      # Backup Snapshots to S3 ( default: false )
+      S3:
+        {{- if .Values.rkeConfig.etcd.S3.enabled }}
+        # "S3 bucket
+        bucket: {{ .Values.rkeConfig.etcd.S3.bucket }}
+        # Existing secret for Authentification to S3 bucket
+        cloudCredentialName: {{ .Values.rkeConfig.etcd.S3.cloudCredentialName }}
+        # S3 bucket endpoint
+        endpoint: {{ .Values.rkeConfig.etcd.S3.endpoint }}
+        # S3 bucket endpoint CA cer
+        endpointCA: {{ .Values.rkeConfig.etcd.S3.endpointCA }}
+        # S3 bucket folder
+        folder: {{ .Values.rkeConfig.etcd.S3.folder }}
+        # S3 bucket region
+        region: {{ .Values.rkeConfig.etcd.S3.region }}
+        # Accept any certificate for S3 endpint ( default: false)
+        skipSSLVerify: {{ .Values.rkeConfig.etcd.S3.skipSSLVerify }}
+        {{- end }}    
+    machineGlobalConfig:
+      # IPv4/IPv6 network CIDRs to use for pod IPs (default: 10.42.0.0/16)
+      cluster-cidr: {{ .Values.rkeConfig.machineGlobalConfig.clusterCidr }}
+      # IPv4 Cluster IP for coredns service. Should be in your service-cidr range (default: 10.43.0.10)
+      cluster-dns: {{ .Values.rkeConfig.machineGlobalConfig.clusterDns }}
+      # Cluster Domain (default: "cluster.local")
+      cluster-domain: {{ .Values.rkeConfig.machineGlobalConfig.clusterDomain }}
+      # CNI Plugin to deploy, one of none, canal, cilium (default: "canal")
+      cni: {{ .Values.rkeConfig.machineGlobalConfig.cni }}
+      # Do not deploy packaged components and delete any deployed components (valid items: rke2-coredns, rke2-ingress-nginx, rke2-kube-proxy, rke2-metrics-server)
+      disable: {{ .Values.rkeConfig.machineGlobalConfig.disable }}
+      # Disable running kube-proxy
+      disable-kube-proxy: {{ .Values.rkeConfig.machineGlobalConfig.disableKubeProxy }}
+      {{- if .Values.rkeConfig.machineGlobalConfig.etcdExposeMetrics }} 
+      # Expose etcd metrics to client interface. (Default false)
+      etcd-expose-metrics: {{ .Values.rkeConfig.machineGlobalConfig.etcdExposeMetrics }} 
+      {{- end }}     
+      {{- if .Values.rkeConfig.machineGlobalConfig.etcdExposeMetrics }} 
+      # Port range to reserve for services with NodePort visibility (default: "30000-32767")
+      service-node-port-range: {{ .Values.rkeConfig.machineGlobalConfig.serviceNodePortRange }}
+      {{- end }}   
+      {{- if .Values.rkeConfig.machineGlobalConfig.serviceCidr }} 
+      # IPv4/IPv6 network CIDRs to use for service IPs (default: 10.43.0.0/16)
+      service-cidr: {{ .Values.rkeConfig.machineGlobalConfig.serviceCidr }} 
+      {{- end }}   
+  
+      {{- if .Values.rkeConfig.machineGlobalConfig.kubeApiserverArg }}
+      # Customized flag for kube-apiserver process
+      kube-apiserver-arg: {{ .Values.rkeConfig.machineGlobalConfig.kubeApiserverArg }}
+      {{- end }}
+      {{- if .Values.rkeConfig.machineGlobalConfig.kubeSchedulerArg }}
+      # Customized flag for kube-scheduler process
+      kube-scheduler-arg: {{ .Values.rkeConfig.machineGlobalConfig.kubeSchedulerArg }}
+      {{- end }}
+      {{- if .Values.rkeConfig.machineGlobalConfig.kubeControllerManagerArg }} 
+      # Customized flag for kube-controller-manager process
+      kube-controller-manager-arg: {{ .Values.rkeConfig.machineGlobalConfig.kubeControllerManagerArg }} 
+      {{- end }}
+      {{- if .Values.rkeConfig.machineGlobalConfig.secretsEncryption }} 
+      # Enable Secret encryption at rest
+      secrets-encryption: { {.Values.rkeConfig.machineGlobalConfig.secretsEncryption }}
+      {{- end }}
+      # Add additional hostnames or IPv4/IPv6 addresses as Subject Alternative Names on the server TLS cert
+      tls-san: {{ .Values.rkeConfig.machineGlobalConfig.tlsSan }}
+
+      
+      # Path to the file that defines the audit policy configuration
+      audit-policy-file: {{ .Values.rkeConfig.machineGlobalConfig.auditPolicyFile }}
+
+      # Validate system configuration against the selected benchmark (valid items: cis-1.5, cis-1.6 )
+      # profile: "cis-1.6"
+      profile: {{ .Values.rkeConfig.machineGlobalConfig.profile }}    
+
+    
+    # machineSelectorConfig:
+    # - config:
+        # Node name
+        # node-name: ""
+        # Disable embedded containerd and use alternative CRI implementation
+        # container-runtime-endpoint: ""
+        # Override default containerd snapshotter (default: "overlayfs")
+        # snapshotter: ""
+        # IP address to advertise for node
+        # node-ip: "1.1.1.1"
+        # Kubelet resolv.conf file
+        # resolv-conf: ""
+        # Customized flag for kubelet process
+        # kubelet-arg: ""
+        # Customized flag for kube-proxy process
+        # kube-proxy-arg: ""
+        # Kernel tuning behavior. If set, error if kernel tunables are different than kubelet defaults. (default: false)
+        # protect-kernel-defaults: false
+        # Enable SELinux in containerd (default: false)
+        # selinux: true
+        # Cloud provider name
+        # cloud-provider-name: ""
+        # Cloud provider configuration file path
+        # cloud-provider-config: ""
+    #rodo    
+    upgradeStrategy:
+      controlPlaneDrainOptions:
+        enabled: false
+        # deleteEmptyDirData: false
+        # disableEviction: false
+        # gracePeriod: 0
+        # ignoreErrors: false
+        # skipWaitForDeleteTimeoutSeconds: 0
+        # timeout: 0
+      workerDrainOptions:
+        enabled: false
+        # deleteEmptyDirData: false
+        # disableEviction: false
+        # gracePeriod: 0
+        # ignoreErrors: false
+        # skipWaitForDeleteTimeoutSeconds: 0
+        # timeout: 0
+      workerConcurrency: "10%"
+      controlPlaneConcurrency: "10%"
+

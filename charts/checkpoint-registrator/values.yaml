@@ -1,0 +1,23 @@
+namespace: checkpoint
+
+# cluster name that will be registered in Checkpoint's Infinity portal - this value is overriden in fleet.yaml
+cluster:
+  name: "cluster-default"
+
+# Url of Checkpoint API required for cluster registration, more info:
+# https://sc1.checkpoint.com/documents/Infinity_Portal/WebAdminGuides/EN/CloudGuard-PM-Admin-Guide/Documentation/FAQ.htm#Endpoints
+# https://sc1.checkpoint.com/documents/Infinity_Portal/WebAdminGuides/EN/CloudGuard-PM-Admin-Guide/Documentation/Assets/Kubernetes.htm?Highlight=kubernetes
+
+checkpoint:
+  apiUrl: "https://api.eu1.cgn.portal.checkpoint.com"
+
+# name of the secret, where are credentials to Checkpoint API
+secretName: checkpoint-registrator-creds
+
+# proxy: http://10.0.45.1:3128
+# noproxy: localhost,127.0.0.1,0.0.0.0,127.0.0.0/8,10.0.0.0/8,cattle-system.svc,172.16.0.0/12,192.168.0.0/16,.svc,.cluster.local,.lab.local,.lab.gr8it.cloud
+
+image:
+  repository: quay.io/appuio/oc
+  tag: "v4.12"
+  pullPolicy: IfNotPresent

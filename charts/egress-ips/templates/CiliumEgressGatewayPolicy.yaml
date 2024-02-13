@@ -1,0 +1,19 @@
+{{ range .Values.CiliumEgressGatewayPolicies }}
+apiVersion: cilium.io/v2
+kind: CiliumEgressGatewayPolicy
+metadata:
+  name: {{ .namespace }}-egw-policy
+spec:
+  destinationCIDRs:
+    - 0.0.0.0/0
+  egressGateway:
+    egressIP: {{ .ip }}
+    nodeSelector:
+      matchLabels:
+        egressgtw: "true"
+  selectors:
+    - podSelector:
+        matchLabels:
+          io.kubernetes.pod.namespace: {{ .namespace }}
+---
+{{ end }}

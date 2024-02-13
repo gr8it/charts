@@ -1,0 +1,9 @@
+namespace: cattle-logging-system
+
+host: ""
+port: 514
+transport: udp
+
+# fluentd file output frequency - more info: https://docs.fluentd.org/output/file
+timekey: 1m
+timekey_wait: 10s

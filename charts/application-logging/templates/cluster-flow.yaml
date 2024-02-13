@@ -1,0 +1,20 @@
+apiVersion: logging.banzaicloud.io/v1beta1
+kind: ClusterFlow
+metadata:
+  name: cluster-flow-exclude-namespaces
+  namespace: {{ .Values.clusterWideResourceNamespace }}
+spec:
+  filters:
+    - tag_normaliser: {}
+    - dedot:
+        de_dot_nested: true
+        de_dot_separator: '-'
+  globalOutputRefs:
+    - cluster-output-elastic
+  match:
+    - exclude:
+        namespaces: {{ toYaml .Values.excludedNamespaces | nindent 10 }}
+    - select:
+        container_names: []
+        hosts: []
+        labels: {}

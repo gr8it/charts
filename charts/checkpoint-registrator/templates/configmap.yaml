@@ -1,0 +1,48 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: checkpoint-registrator-configmap
+  namespace: {{ .Values.namespace }}
+data:
+  cluster-name: {{ .Values.cluster.name }}
+  checkpoint-api-url: {{.Values.checkpoint.apiUrl}}
+  checkpoint_installer_job.sh: |
+    #!/bin/bash
+
+    if [[ -z "${CLUSTER_NAME}" ]]; then
+        echo "CLUSTER_NAME must be set"
+        exit 1
+    fi
+
+    echo "---------------------------------------------"
+    echo ">> Checkpoint hyper auto installer by gr8it<<"
+    echo "---------------------------------------------"
+  
+    # ------------------------------------------------------------------------------------
+    # create cluster using checkpoint API endpoint
+    
+    echo "Creating cluster in Checkpoint cloud..."
+    response=$(curl -sS -X POST $CHECKPOINT_API_URL/v2/kubernetes/account --header 'Content-Type: application/json' --header 'Accept: application/json' -d "{\"name\" : \"$CLUSTER_NAME\"}" --user "$CHECKPOINT_API_KEY:$CHECKPOINT_API_SECRET")
+    
+    if grep -q "statusCode" <<< "$response"; then
+      echo "$response"
+      exit 1
+    fi
+    
+    CLUSTER_ID=$(echo "$response" | jq -r '.id')
+    echo "Cluster ID: $CLUSTER_ID"
+
+    # enable required features
+    echo "Enabling additional features..."
+    curl -sS -X POST "$CHECKPOINT_API_URL/v2/kubernetes/account/$CLUSTER_ID/imageAssurance/enable" --user "$CHECKPOINT_API_KEY:$CHECKPOINT_API_SECRET"
+    curl -sS -X POST "$CHECKPOINT_API_URL/v2/kubernetes/account/$CLUSTER_ID/admissionControl/enable" --user "$CHECKPOINT_API_KEY:$CHECKPOINT_API_SECRET"
+    curl -sS -X POST "$CHECKPOINT_API_URL/v2/kubernetes/account/$CLUSTER_ID/runtimeProtection/enable" --user "$CHECKPOINT_API_KEY:$CHECKPOINT_API_SECRET"
+
+    # write cluster ID to k8s secrets manager
+    if [[ ! -n "${CLUSTER_ID}" ]]; then
+        echo "Secret not created, cluster was not registered in checkpoint cloud"   
+        exit 1
+    fi
+    echo "Store cluster ID in secret manager..."
+    kubectl delete secret checkpoint-cluster-id --ignore-not-found
+    kubectl create secret generic checkpoint-cluster-id --from-literal=values.yaml="clusterID: $CLUSTER_ID"

@@ -1,0 +1,92 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: checkpoint-registrator-job
+  namespace: {{ .Values.namespace }}
+spec:
+  parallelism: 1
+  completions: 1
+  template:
+    metadata:
+      namespace: {{ .Values.namespace }}
+    spec:
+      serviceAccountName: checkpoint-registrator-sa
+      containers:
+        - imagePullPolicy: Always
+          name: checkpoint-registrator-job
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+          securityContext:
+            runAsUser: 1000
+            allowPrivilegeEscalation: false
+          #   # fsGroup: 65534
+          # command: ['/bin/sh', '-c', 'sleep 1d']
+          command: ['/script/checkpoint_installer_job.sh']
+          volumeMounts:
+            - name: script
+              mountPath: "/script/"
+          env:
+            - name: CHECKPOINT_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{.Values.secretName}}
+                  key: api_key
+            - name: CHECKPOINT_API_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{.Values.secretName}}
+                  key: api_secret_key
+
+            - name: CLUSTER_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: checkpoint-registrator-configmap
+                  key: cluster-name
+
+            - name: CHECKPOINT_API_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: checkpoint-registrator-configmap
+                  key: checkpoint-api-url
+                        
+            - name: HTTP_PROXY
+              valueFrom:
+                configMapKeyRef:
+                  name: checkpoint-registrator-proxy
+                  key: HTTP_PROXY
+                  optional: true
+            - name: HTTPS_PROXY
+              valueFrom:
+                configMapKeyRef:
+                  name: checkpoint-registrator-proxy
+                  key: HTTPS_PROXY
+                  optional: true
+            - name: NO_PROXY
+              valueFrom:
+                configMapKeyRef:
+                  name: checkpoint-registrator-proxy
+                  key: NO_PROXY
+                  optional: true
+            - name: http_proxy
+              valueFrom:
+                configMapKeyRef:
+                  name: checkpoint-registrator-proxy
+                  key: http_proxy
+                  optional: true
+            - name: https_proxy
+              valueFrom:
+                configMapKeyRef:
+                  name: checkpoint-registrator-proxy
+                  key: https_proxy
+                  optional: true
+            - name: no_proxy
+              valueFrom:
+                configMapKeyRef:
+                  name: checkpoint-registrator-proxy
+                  key: no_proxy
+                  optional: true
+      volumes:
+        - name: script
+          configMap:
+            name: checkpoint-registrator-configmap
+            defaultMode: 0755
+      restartPolicy: OnFailure

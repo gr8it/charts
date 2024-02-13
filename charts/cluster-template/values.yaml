@@ -1,0 +1,99 @@
+# cluster specific values
+cluster:
+  # specify cluster name
+  name: template-rke2
+
+  # specify cluster labels
+  labels: {}
+
+  # specify cluster annotations
+  annotations: {}
+
+# specify cloud credential secret name, do not need to be provided if using custom driver
+cloudCredentialSecretName: ""
+
+# defaultPodSecurityAdmissionConfigurationTemplateName: ''
+# defaultPodSecurityPolicyTemplateName: '' 
+# fleetAgentDeploymentCustomization:  ''
+
+# enable network policy, project isolation
+enableNetworkPolicy: true
+
+# specify cloud provider, options are amazonec2, digitalocean, azure, vsphere or custom
+cloudprovider: "digitalocean"
+
+kubernetesVersion: ""
+
+# general RKE options
+rkeConfig:
+  # enable local auth endpoint
+  localClusterAuthEndpoint:
+    enabled: false
+  # specify fqdn of local access endpoint
+  # fqdn: foo.bar.example
+  # specify cacert of local access endpoint
+  # caCerts: ""
+  chartValues:
+  etcd:
+    disableSnapshots: false
+    snapshotRetention: 5
+    snapshotScheduleCron: "0 */5 * * *"
+    S3:
+      enabled: false
+      bucket: ''
+      cloudCredentialName: null
+      endpoint: ''
+      endpointCA: ''
+      folder: ''
+      region: ''
+      skipSSLVerify: false  
+  machineGlobalConfig:
+    auditPolicyFile: ""
+    cni: calico
+    clusterCidr: "10.42.0.0/16"
+    clusterDns: "10.43.0.10"
+    clusterDomain: "cluster.local"
+    disable: []
+    disableKubeProxy: false
+
+    # Port range to reserve for services with NodePort visibility (default: "30000-32767")
+    # serviceNodePortRange
+    # IPv4/IPv6 network CIDRs to use for service IPs (default: 10.43.0.0/16)
+    # serviceCidr: "10.0.0.0/28"
+
+    # Expose etcd metrics to client interface. (Default false)
+    etcdExposeMetrics: false    
+    # Port range to reserve for services with NodePort visibility (default: "30000-32767")
+    # serviceNodePortRange: "30000-32767"
+    # IPv4/IPv6 network CIDRs to use for service IPs (default: 10.43.0.0/16)
+    # serviceCidr: "10.43.0.0/16" 
+    # Customized flag for kube-apiserver process
+    # kubeApiserverArg: ""
+    # Customized flag for kube-scheduler process
+    # kubeSchedulerArg: ""
+    # Customized flag for kube-controller-manager process
+    # kubeControllerManagerArg: ""
+    # Enable Secret encryption at rest( default false )
+    secretsEncryption: false
+    # Add additional hostnames or IPv4/IPv6 addresses as Subject Alternative Names on the server TLS cert
+    tlsSan: []
+    # Path to the file that defines the audit policy configuration
+    # audit-policy-file:    
+    # Validate system configuration against the selected benchmark (valid items: cis-1.5, cis-1.6 )
+    # profile: null
+
+  machineSelectorConfig:
+  
+# specify user principal ids to be assiged as cluster members
+# clusterMembers:
+# - principalName: "local://u-z8zl5"
+#   roleTemplateName: "cluster-member"
+
+# enable monitoring
+monitoring:
+  enabled: false
+  # specify which version to install, can be semver range. If version is empty or is semver range, it will pick up the latest version.
+  # version: ""
+  # specify cutsom values set
+  # values:
+  #   foo: bar

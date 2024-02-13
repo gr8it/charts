@@ -1,0 +1,8 @@
+apiVersion: v2
+name: CiliumEgressGatewayPolicy object setup
+description: A Chart to deploy CiliumEgressGatewayPolicies
+version: 1.0.0
+keywords:
+  - rancher
+  - cilium
+  - egress

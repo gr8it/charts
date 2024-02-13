@@ -1,0 +1,19 @@
+apiVersion: logging.banzaicloud.io/v1beta1
+kind: ClusterOutput
+metadata:
+  name: siem-syslog-output
+  namespace: {{ .Values.namespace }}
+spec:
+  syslog:
+    buffer:
+      timekey: {{ .Values.timekey }}
+      timekey_use_utc: true
+      timekey_wait: {{ .Values.timekey_wait }}
+    format:
+      app_name_field: kubernetes.labels.app
+      hostname_field: kubernetes.host
+      log_field: message
+    host: {{ .Values.host }}
+    insecure: true
+    port: {{ .Values.port }}
+    transport: {{ .Values.transport }}

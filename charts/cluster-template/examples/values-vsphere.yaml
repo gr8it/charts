@@ -1,0 +1,330 @@
+# cluster specific values
+cluster:
+  # specify cluster name
+  name: pse-c03
+
+  # specify cluster labels
+  labels: {}
+
+  # specify cluster annotations
+  annotations:
+    catalog.cattle.io/namespace: fleet-default
+
+kubernetesVersion: "v1.26.9+rke2r1"
+
+# enable network policy
+enableNetworkPolicy: true
+
+# specify rancher helm chart values deployed into downstream cluster
+rancherValues: {}
+
+# specify extra env variables in cluster-agent deployment
+# agentEnvs:
+#  - name: HTTP_PROXY
+#     value: foo.bar
+
+# general RKE options
+rkeConfig:
+  # specify rancher helm chart values deployed into downstream cluster
+  chartValues:
+    rke2-cilium:
+      hubble:
+        enabled: true
+
+  # controlplane/etcd configuration settings
+  machineGlobalConfig:
+    # Path to the file that defines the audit policy configuration
+    # audit-policy-file: ""
+    # IPv4/IPv6 network CIDRs to use for pod IPs (default: 10.42.0.0/16)
+    # cluster-cidr: ""
+    # IPv4 Cluster IP for coredns service. Should be in your service-cidr range (default: 10.43.0.10)
+    # cluster-dns: ""
+    # Cluster Domain (default: "cluster.local")
+    # cluster-domain: ""
+    # CNI Plugin to deploy, one of none, canal, cilium (default: "canal")
+    cni: cilium
+    # Do not deploy packaged components and delete any deployed components (valid items: rke2-coredns, rke2-ingress-nginx, rke2-kube-proxy, rke2-metrics-server)
+    # disable: false
+    # Disable automatic etcd snapshots
+    # etcd-disable-snapshots: false
+    # Expose etcd metrics to client interface. (Default false)
+    # etcd-expose-metrics: false
+    # Directory to save db snapshots. (Default location: ${data-dir}/db/snapshots)
+    # etcd-snapshot-dir: ""
+    # Set the base name of etcd snapshots. Default: etcd-snapshot-<unix-timestamp> (default: "etcd-snapshot")
+    # etcd-snapshot-name: ""
+    # Number of snapshots to retain (default: 5)
+    # etcd-snapshot-retention: 5
+    # Snapshot interval time in cron spec. eg. every 5 hours '* */5 * * *' (default: "0 */12 * * *")
+    # etcd-snapshot-schedule-cron: "0 */12 * * *"
+    # Customized flag for kube-apiserver process
+    # kube-apiserver-arg: ""
+    # Customized flag for kube-scheduler process
+    # kube-scheduler-arg: ""
+    # Customized flag for kube-controller-manager process
+    # kube-controller-manager-arg: ""
+    # Validate system configuration against the selected benchmark (valid items: cis-1.5, cis-1.6 )
+    # profile: "cis-1.6"
+    # Enable Secret encryption at rest
+    # secrets-encryption: false
+    # IPv4/IPv6 network CIDRs to use for service IPs (default: 10.43.0.0/16)
+    # service-cidr: "10.43.0.0/16"
+    # Port range to reserve for services with NodePort visibility (default: "30000-32767")
+    # service-node-port-range: "30000-32767"
+    # Add additional hostnames or IPv4/IPv6 addresses as Subject Alternative Names on the server TLS cert
+    # tls-san: []
+
+  # worker configuration settings
+  workerConfig:
+  - config:
+      # Node name
+      # node-name: ""
+      # Disable embedded containerd and use alternative CRI implementation
+      # container-runtime-endpoint: ""
+      # Override default containerd snapshotter (default: "overlayfs")
+      # snapshotter: ""
+      # IP address to advertise for node
+      # node-ip: "1.1.1.1"
+      # Kubelet resolv.conf file
+      # resolv-conf: ""
+      # Customized flag for kubelet process
+      # kubelet-arg: ""
+      # Customized flag for kube-proxy process
+      # kube-proxy-arg: ""
+      # Kernel tuning behavior. If set, error if kernel tunables are different than kubelet defaults. (default: false)
+      # protect-kernel-defaults: false
+      # Enable SELinux in containerd (default: false)
+      # selinux: true
+      # Cloud provider name
+      # cloud-provider-name: ""
+      # Cloud provider configuration file path
+      # cloud-provider-config: ""
+    machineLabelSelector:
+      matchLabels:
+        foo: bar
+
+  # enable local auth endpoint
+  localClusterAuthEndpoint:
+    enabled: true
+    # specify fqdn of local access endpoint
+    fqdn: test.cluster.rancher.lab.local
+    # specify cacert of local access endpoint
+    # caCerts: ""
+
+  # Specify upgrade options
+  upgradeStrategy:
+    controlPlaneDrainOptions:
+      enabled: false
+      # deleteEmptyDirData: false
+      # disableEviction: false
+      # gracePeriod: 0
+      # ignoreErrors: false
+      # skipWaitForDeleteTimeoutSeconds: 0
+      # timeout: 0
+    workerDrainOptions:
+      enabled: false
+      # deleteEmptyDirData: false
+      # disableEviction: false
+      # gracePeriod: 0
+      # ignoreErrors: false
+      # skipWaitForDeleteTimeoutSeconds: 0
+      # timeout: 0
+    workerConcurrency: "1"
+
+# specify user principal ids to be assiged as cluster members
+# clusterMembers:
+# - principalName: "local://u-z8zl5"
+#   roleTemplateName: "cluster-member"
+
+# enable monitoring
+monitoring:
+  enabled: false
+  # specify which version to install, can be semver range. If version is empty or is semver range, it will pick up the latest version.
+  # version: "102.0.1+up40.1.2"
+  # specify custom values set
+  # values:
+  #   foo: bar
+
+# specify cloud credential secret name, do not need to be provided if using custom driver
+cloudCredentialSecretName: "cattle-global-data:cc-vzx6r"
+
+# specify cloud provider, options are amazonec2, digitalocean, azure, vsphere or custom
+cloudprovider: "vsphere"
+
+# Specify nodepool options. Can add multiple node groups, specify etcd, controlplane and worker roles.
+nodepools:
+- etcd: true
+  controlplane: true
+  worker: true
+
+  # specify node labels
+  labels: {}
+
+  # specify node taints
+  taints: {}
+
+  # specify nodepool size
+  quantity: 1
+
+  # Pause node pool
+  paused: false
+
+  # specify displayName
+  # displayName: ""
+
+  # specify rolling update mechanism
+  # rollingUpdate:
+  #   The maximum number of machines that can be unavailable during the update.
+  #   Value can be an absolute number (ex: 5) or a percentage of desired
+  #   machines (ex: 10%).
+  #   Absolute number is calculated from percentage by rounding down.
+  #   This can not be 0 if MaxSurge is 0.
+  #   Defaults to 0.
+  #   Example: when this is set to 30%, the old MachineSet can be scaled
+  #   down to 70% of desired machines immediately when the rolling update
+  #   starts. Once new machines are ready, old MachineSet can be scaled
+  #   down further, followed by scaling up the new MachineSet, ensuring
+  #   that the total number of machines available at all times
+  #   during the update is at least 70% of desired machines.
+  #   maxUnavailable: "5"
+  #   The maximum number of machines that can be scheduled above the
+  #   desired number of machines.
+  #   Value can be an absolute number (ex: 5) or a percentage of
+  #   desired machines (ex: 10%).
+  #   This can not be 0 if MaxUnavailable is 0.
+  #   Absolute number is calculated from percentage by rounding up.
+  #   Defaults to 1.
+  #   Example: when this is set to 30%, the new MachineSet can be scaled
+  #   up immediately when the rolling update starts, such that the total
+  #   number of old and new machines do not exceed 130% of desired
+  #   machines. Once old machines have been killed, new MachineSet can
+  #   be scaled up further, ensuring that total number of machines running
+  #   at any time during the update is at most 130% of desired machines.
+  #   maxSurge: "1"
+
+  # specify machineDeployment Labels
+  # machineDeploymentLabels: {}
+
+  # specify machineDeployment annotations
+  # machineDeploymentAnnotations: {}
+
+  # specify nodepool name
+  name: ps2-np-1
+
+  # vSphere vm configuration parameters (used for guestinfo)
+  # cfgparam: []
+
+  # If you choose creation type clone a name of what you want to clone is required
+  cloneFrom: "/aspecta-lab/vm/rancher-template"
+
+  # Contents of cloud-config yaml file to put into the ISO user-data; Format should be:
+  cloudConfig: |
+    #cloud-config
+    write_files:
+      - path: /etc/cloud/cloud.cfg.d/99-disable-network-config.cfg
+        content: |
+          network: 
+            config: disabled
+      - path: /root/test.sh
+        content: |
+          #!/bin/bash
+          vmtoolsd --cmd 'info-get guestinfo.ovfEnv' > /tmp/ovfenv
+          IPAddress=$(sed -n 's/.*Property oe:key="guestinfo.interface.0.ip.0.address" oe:value="\([^"]*\).*/\1/p' /tmp/ovfenv)
+          SubnetMask=$(sed -n 's/.*Property oe:key="guestinfo.interface.0.ip.0.netmask" oe:value="\([^"]*\).*/\1/p' /tmp/ovfenv)
+          Gateway=$(sed -n 's/.*Property oe:key="guestinfo.interface.0.route.0.gateway" oe:value="\([^"]*\).*/\1/p' /tmp/ovfenv)
+          DNS=$(sed -n 's/.*Property oe:key="guestinfo.dns.servers" oe:value="\([^"]*\).*/\1/p' /tmp/ovfenv)
+          cat > /etc/netplan/99-netcfg.yaml <<EOF
+          network:
+            version: 2
+            renderer: networkd
+            ethernets:
+              ens192:
+                addresses:
+                  - $IPAddress/24
+                gateway4: $Gateway
+                nameservers:
+                  addresses : [$DNS]
+          EOF
+          sudo netplan apply
+          echo "127.0.0.1    localhost" >> /etc/hosts
+          echo "::1    localhost" >> /etc/hosts
+    runcmd:
+      - bash /root/test.sh
+  
+
+  # vSphere cloud-init filepath or url to add to guestinfo, filepath will be read and base64 encoded before adding
+  # cloudinit: ""
+
+  # If you choose to clone from a content library template specify the name of the library
+  contentLibrary: "lab"
+
+  # vSphere CPU number for docker VM
+  cpuCount: "4"
+
+  # 'Creation type when creating a new virtual machine. Supported values: vm, template, library, legacy'
+  # creationType: "vm"
+  creationType: "template"
+
+  # vSphere custom attribute, format key/value e.g. '200=mycustom value'
+  # customAttribute: ["200=mycustom value"]
+
+  # vSphere datacenter for virtual machine
+  datacenter: "/aspecta-lab"
+
+  # vSphere datastore for virtual machine
+  datastore: "/aspecta-lab/datastore/bay02_esxi01_ssd"
+
+  # vSphere datastore cluster for virtual machine
+  # datastoreCluster: ""
+
+  # vSphere size of disk for docker VM (in MB)
+  diskSize: "20480"
+
+  # vSphere folder for the docker VM. This folder must already exist in the datacenter
+  folder: "/aspecta-lab/vm/private-cloud"
+
+  # vSphere compute resource where the docker VM will be instantiated. This can be omitted if using a cluster with DRS
+  # hostsystem: ""
+
+  # vSphere size of memory for docker VM (in MB)
+  memorySize: "8192"
+
+  # vSphere network where the virtual machine will be attached
+  network: 
+    - "/aspecta-lab/network/vSwitch_LAB-data_VLAN41"
+
+  # vSphere resource pool for docker VM
+  pool: "/aspecta-lab/host/lab-blade-cluster01/Resources/private-cloud02"
+
+  # If using a non-B2D image you can specify the ssh port
+  sshPort: "22"
+
+  # If using a non-B2D image the uploaded keys will need chown'ed, defaults to staff e.g. docker:staff
+  sshUser: docker
+  sshUserGroup: staff
+
+
+  # vSphere tag id e.g. urn:xxx
+  # tag: ["urn:xxx"]
+
+  # 'vSphere vApp IP allocation policy. Supported values are: dhcp, fixed, transient and fixedAllocated'
+  vappIpallocationpolicy: "fixedAllocated"
+
+  # 'vSphere vApp IP protocol for this deployment. Supported values are: IPv4 and IPv6'
+  vappIpprotocol: "IPv4"
+
+  # vSphere vApp properties
+  vappProperty: 
+  - 'guestinfo.interface.0.ip.0.address=ip:vSwitch_LAB-data_VLAN41'
+  - 'guestinfo.interface.0.ip.0.netmask=${netmask:vSwitch_LAB-data_VLAN41}'
+  - 'guestinfo.interface.0.route.0.gateway=${gateway:vSwitch_LAB-data_VLAN41}'
+  - 'guestinfo.dns.servers=${dns:vSwitch_LAB-data_VLAN41}'
+
+  # 'vSphere OVF environment transports to use for properties. Supported values are: iso and com.vmware.guestInfo'
+  vappTransport: "com.vmware.guestInfo"
+
+  # vSphere IP/hostname for vCenter
+  # vcenter: ""
+
+  # vSphere Port for vCenter
+  vcenterPort: 443

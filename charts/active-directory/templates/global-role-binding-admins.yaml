@@ -1,0 +1,12 @@
+{{ range .Values.globalRolesDNs }}
+---
+apiVersion: management.cattle.io/v3
+globalRoleName: {{ .globalRoleName }}
+groupPrincipalName: >-
+  activedirectory_group://{{ .DN }}
+kind: GlobalRoleBinding
+metadata:
+  labels:
+    cattle.io/creator: norman
+  name: grb-{{ .name }}
+{{ end }}

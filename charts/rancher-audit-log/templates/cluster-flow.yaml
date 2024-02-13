@@ -1,0 +1,17 @@
+apiVersion: logging.banzaicloud.io/v1beta1
+kind: ClusterFlow
+metadata:
+  name: rancher-logging-flow
+  namespace: {{ .Values.namespace }}
+spec:
+  globalOutputRefs:
+    - siem-syslog-output
+  match:
+    - select:
+        container_names:
+          - rancher-audit-log
+        hosts: []
+        labels:
+          app: rancher
+        namespaces:
+          - cattle-system

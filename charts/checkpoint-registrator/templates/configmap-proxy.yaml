@@ -1,0 +1,16 @@
+{{- if .Values.proxy }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: checkpoint-registrator-proxy
+data:
+  HTTP_PROXY: {{ .Values.proxy }}
+  HTTPS_PROXY: {{ .Values.proxy }}
+  http_proxy: {{ .Values.proxy }}
+  https_proxy: {{ .Values.proxy }}
+  {{- if .Values.noproxy }}
+  no_proxy: {{ .Values.noproxy }}
+  NO_PROXY: {{ .Values.noproxy }}
+  {{- end }}
+{{- end }}
+

@@ -1,0 +1,39 @@
+clusterWideResourceNamespace: cattle-logging-system
+
+# syslog server
+syslog_host: ""
+syslog_port: 514
+syslog_transport: udp
+
+# elastic server
+elastic_host: ""
+elastic_port: 9200
+elastic_user: ""
+index_name_all_logs: cluster-all
+index_name_audit_logs: cluster-all-audit
+
+# fluentd file output frequency - more info: https://docs.fluentd.org/output/file
+timekey: 1m
+timekey_wait: 1m
+
+# audit log filter - regexp
+key: message
+pattern: /"tags":\["AUDIT"\]/
+
+# namespaces EXCLUDED from logging - only application namespaces are in scope
+excludedNamespaces:
+  - cattle-dashboards
+  - cattle-fleet-system
+  - cattle-impersonation-system
+  - cattle-logging-system
+  - cattle-monitoring-system
+  - cattle-system
+  - kube-node-lease
+  - kube-public
+  - kube-system
+  - kafka
+  - kyverno
+  - checkpoint
+  - minio-tenant
+  - minio-operator
+  - mongodb-operator

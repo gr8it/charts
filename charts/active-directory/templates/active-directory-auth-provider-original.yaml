@@ -1,0 +1,9 @@
+apiVersion: management.cattle.io/v3
+kind: AuthConfig
+metadata:
+  labels:
+    cattle.io/creator: norman
+  name: activedirectory
+  annotations:
+    "helm.sh/hook": post-delete
+type: activeDirectoryConfig

@@ -1,0 +1,44 @@
+enabled: true
+
+server: ""
+port: 636
+tls: true
+starttls: false
+certificate: ""
+connectionTimeout: 5000
+serviceAccountUsername: ""
+# serviceAccountPassword -> to be stored as item serviceaccountpassword in secret activedirectoryconfig-serviceaccountpassword in namespace cattle-global-data
+defaultLoginDomain: ""
+
+userSearchBase: ""
+groupSearchBase: ""
+
+userObjectClass: person
+userNameAttribute: name
+userLoginAttribute: sAMAccountName
+# userMemberAttribute?: # no schema to check!
+userSearchAttribute: sAMAccountName|sn|givenName
+userSearchFilter: ""
+userEnabledAttribute: userAccountControl
+userDisabledBitMask: 2
+
+groupObjectClass: group
+groupNameAttribute: name
+groupDNAttribute: distinguishedName
+groupSearchAttribute: sAMAccountName
+groupSearchFilter: ""
+groupMemberMappingAttribute: member
+groupMemberUserAttribute: distinguishedName
+
+nestedGroupMembershipEnabled: false
+
+# one of unrestricted, restricted, required
+# if restricted, required => allowedGroupDNs must specify at least 1 group DN to allow access
+accessMode: required
+# group DN from group search base, e.g. CN=K8S-GLOBAL_ADMIN,OU=K8S,OU=Groups,OU=BA,DC=pss,DC=local
+allowedGroupDNs: []
+
+globalRolesDNs:
+  - name: superadmins
+    globalRoleName: admin
+    DN: ""

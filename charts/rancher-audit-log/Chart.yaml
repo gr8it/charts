@@ -1,0 +1,8 @@
+apiVersion: v2
+name: Rancher API audit log forwarder
+description: A Chart to enable sending of Rancher API audit log to syslog server (SIEM) using RFC5424 format
+version: 1.0.0
+keywords:
+  - rancher
+  - audit
+  - log

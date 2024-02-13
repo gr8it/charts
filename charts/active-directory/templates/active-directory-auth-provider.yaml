@@ -1,0 +1,51 @@
+# _type: activeDirectoryConfig
+accessMode: {{ .Values.accessMode | default "unrestricted" }} 
+{{ if .Values.allowedGroupDNs -}}
+allowedPrincipalIds:
+{{ range .Values.allowedGroupDNs -}}
+  - activedirectory_group://{{ . }}
+{{ end -}}
+{{ end -}}
+apiVersion: management.cattle.io/v3
+{{ if .Values.certificate -}}
+certificate: |-
+{{ .Values.certificate | indent 2 }}
+{{ end -}}
+connectionTimeout: {{ .Values.connectionTimeout | default 5000 }}
+defaultLoginDomain: {{ .Values.defaultLoginDomain | default "null" }}
+enabled: {{ .Values.enabled | default true }}
+groupDNAttribute: {{ .Values.groupDNAttribute | default "distinguishedName" }}
+groupMemberMappingAttribute: {{ .Values.groupMemberMappingAttribute | default "member" }}
+groupMemberUserAttribute: {{ .Values.groupMemberUserAttribute | default "distinguishedName" }}
+groupNameAttribute: {{ .Values.groupNameAttribute | default "name" }}
+groupObjectClass: {{ .Values.groupObjectClass | default "group" }}
+groupSearchAttribute: {{ .Values.groupSearchAttribute | default "sAMAccountName" }}
+{{ if .Values.groupSearchBase -}}
+groupSearchBase: {{ .Values.groupSearchBase }}
+{{ end -}}
+{{ if .Values.groupSearchFilter -}}
+groupSearchFilter: {{ .Values.groupSearchFilter }}
+{{ end -}}
+kind: AuthConfig
+metadata:
+  labels:
+    cattle.io/creator: norman
+  name: activedirectory
+nestedGroupMembershipEnabled: {{ .Values.nestedGroupMembershipEnabled | default false }}
+port: {{ .Values.port | default 389 }}
+servers:
+- {{ .Values.server }}
+serviceAccountPassword: cattle-global-data:activedirectoryconfig-serviceaccountpassword
+serviceAccountUsername: {{ .Values.serviceAccountUsername }}
+starttls: {{ .Values.starttls | default false}}
+tls: {{ .Values.tls | default false}}
+userDisabledBitMask: {{ .Values.userDisabledBitMask | default 2 }}
+userEnabledAttribute: {{ .Values.userEnabledAttribute | default "userAccountControl" }}
+userLoginAttribute: {{ .Values.userLoginAttribute | default "sAMAccountName" }}
+userNameAttribute: {{ .Values.userNameAttribute | default "name" }}
+userObjectClass: {{ .Values.userObjectClass | default "person" }}
+userSearchAttribute: {{ .Values.userSearchAttribute | default "sAMAccountName|sn|givenName" }}
+userSearchBase: {{ .Values.userSearchBase }}
+{{ if .Values.userSearchFilter -}}
+userSearchFilter: {{ .Values.userSearchFilter }}
+{{ end }}
