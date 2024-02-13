@@ -4,8 +4,11 @@ ifeq ($(strip $(CHARTFOLDER)),)
     CHARTFOLDER := $(CURDIR)
 	CHARTFOLDERS := $(wildcard $(CHARTFOLDER)/../charts/*/)
 else
-	CHARTFOLDERS = $(addprefix $(CURDIR)/../charts/, $(CHARTFOLDER))	
+	CHARTFOLDERS := $(addprefix $(CURDIR)/../charts/, $(CHARTFOLDER))
 endif
+
+CHARTS_DIR := $(CURDIR)/../charts
+OUTPUT_DIR := $(CURDIR)/../packaged_charts
 
 debug:
 	@echo "$${REPO_USERNAME}"
@@ -19,9 +22,16 @@ lint:
 	done
 
 package:
+	@mkdir -p $(OUTPUT_DIR)
 	@for folder in $(CHARTFOLDERS); do \
-		echo "Chart package in folder: $$folder "; \
-		helm package $$folder -d $(CURDIR)/..; \
+			chart_name=$$(basename $${folder}); \
+			chart_version=$$(grep '^version:' $${folder}/Chart.yaml | awk '{print $$2}'); \
+			if [ -f $(OUTPUT_DIR)/$${chart_name}-$${chart_version}.tgz ]; then \
+					echo -e "Chart package $${chart_name}-$${chart_version} already exists - \e[33mskipping\e[0m. Increase version in Chart.yaml and package again"; \
+			else \
+					echo "Packaging chart $${chart_name}-$${chart_version}"; \
+					helm package $${folder} --version $${chart_version} --destination $(OUTPUT_DIR); \
+			fi \
 	done
 
 index:
