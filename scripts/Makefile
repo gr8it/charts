@@ -23,6 +23,12 @@ lint:
 
 package:
 	@mkdir -p $(OUTPUT_DIR)
+	# Git pull so the version check is done against the latest and gratest version in the repo
+	@ git pull; \
+	if [ $$? -ne 0  ]; then \
+		echo "Couldn't update repo! Exiting .."; \
+		exit 1; \
+	fi
 	@for folder in $(CHARTFOLDERS); do \
 			chart_name=$$(basename $${folder}); \
 			chart_version=$$(grep '^version:' $${folder}/Chart.yaml | awk '{print $$2}'); \
