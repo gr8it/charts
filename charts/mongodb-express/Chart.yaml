@@ -1,7 +1,7 @@
 apiVersion: v2
 name: mongodb-express
 description: A Chart to install MongoDB Express, uses credentials stored in a secret created by MongoDB community operator
-version: 1.0.0
+version: 1.1.0
 appVersion: "1.0.0-20"
 keywords:
   - mongodb
