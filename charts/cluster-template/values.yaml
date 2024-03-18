@@ -26,6 +26,9 @@ kubernetesVersion: ""
 
 # general RKE options
 rkeConfig:
+  #
+  # all possible values are liste here https://docs.rke2.io/reference/server_config
+  #
   # enable local auth endpoint
   localClusterAuthEndpoint:
     enabled: false
@@ -35,25 +38,47 @@ rkeConfig:
   # caCerts: ""
   chartValues:
   etcd:
+    # Disable automatic etcd snapshots
     disableSnapshots: false
+    # Number of snapshots to retain (default: 5)
     snapshotRetention: 5
+    # Snapshot interval time in cron spec. eg. every 5 hours '* */5 * * *' (default: "* */5 * * *")
     snapshotScheduleCron: "0 */5 * * *"
+    # Directory to save db snapshots. (Default location: ${data-dir}/db/snapshots)
+    # etcdSnapshotDir:
+    # Set the base name of etcd snapshots. Default: etcd-snapshot-<unix-timestamp> (default: "etcd-snapshot")
+    # etcdSnapshotName: 
+    # Backup Snapshots to S3 ( default: false )
     S3:
       enabled: false
+      # "S3 bucket
       bucket: ''
+      # Existing secret for Authentification to S3 bucket
       cloudCredentialName: null
+      # S3 bucket endpoint
       endpoint: ''
+      # S3 bucket endpoint CA cer
       endpointCA: ''
+      # S3 bucket folder
       folder: ''
+      # S3 bucket region
       region: ''
+      # Accept any certificate for S3 endpint ( default: false)
       skipSSLVerify: false  
   machineGlobalConfig:
+    # Path to the file that defines the audit policy configuration
     auditPolicyFile: ""
+    # CNI Plugin to deploy, one of none, canal, cilium (default: "canal")
     cni: calico
+    # IPv4/IPv6 network CIDRs to use for pod IPs (default: 10.42.0.0/16)
     clusterCidr: "10.42.0.0/16"
+    # IPv4 Cluster IP for coredns service. Should be in your service-cidr range (default: 10.43.0.10)
     clusterDns: "10.43.0.10"
+    # Cluster Domain (default: "cluster.local")
     clusterDomain: "cluster.local"
+    # Do not deploy packaged components and delete any deployed components (valid items: rke2-coredns, rke2-ingress-nginx, rke2-kube-proxy, rke2-metrics-server)
     disable: []
+    # Disable running kube-proxy
     disableKubeProxy: false
 
     # Port range to reserve for services with NodePort visibility (default: "30000-32767")
@@ -80,6 +105,7 @@ rkeConfig:
     # Path to the file that defines the audit policy configuration
     # audit-policy-file:    
     # Validate system configuration against the selected benchmark (valid items: cis-1.5, cis-1.6 )
+    # profile: "cis-1.6"
     # profile: null
 
   machineSelectorConfig:
