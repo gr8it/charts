@@ -12,9 +12,9 @@ cluster:
 # specify cloud credential secret name, do not need to be provided if using custom driver
 cloudCredentialSecretName: ""
 
-# defaultPodSecurityAdmissionConfigurationTemplateName: ''
-# defaultPodSecurityPolicyTemplateName: '' 
-# fleetAgentDeploymentCustomization:  ''
+# defaultPodSecurityAdmissionConfigurationTemplateName: ""
+# defaultPodSecurityPolicyTemplateName: "" 
+# fleetAgentDeploymentCustomization:  ""
 
 # enable network policy, project isolation
 enableNetworkPolicy: true
@@ -52,17 +52,17 @@ rkeConfig:
     S3:
       enabled: false
       # "S3 bucket
-      bucket: ''
+      bucket: ""
       # Existing secret for Authentification to S3 bucket
       cloudCredentialName: null
       # S3 bucket endpoint
-      endpoint: ''
+      endpoint: ""
       # S3 bucket endpoint CA cer
-      endpointCA: ''
+      endpointCA: ""
       # S3 bucket folder
-      folder: ''
+      folder: ""
       # S3 bucket region
-      region: ''
+      region: ""
       # Accept any certificate for S3 endpint ( default: false)
       skipSSLVerify: false  
   machineGlobalConfig:
@@ -107,9 +107,10 @@ rkeConfig:
     # Validate system configuration against the selected benchmark (valid items: cis-1.5, cis-1.6 )
     # profile: "cis-1.6"
     # profile: null
-
   machineSelectorConfig:
-  
+  # https://docs.rke2.io/advanced#auto-deploying-manifests, should be a multiline string containing kubernetes manifests separated by ---
+  additionalManifest: |
+
 # specify user principal ids to be assiged as cluster members
 # clusterMembers:
 # - principalName: "local://u-z8zl5"

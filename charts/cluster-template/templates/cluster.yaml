@@ -41,7 +41,7 @@ spec:
     caCerts: {{ .Values.rkeConfig.localClusterAuthEndpoint.caCerts }}
     {{- end }}
   {{- end }}
-  {{- if .Values.enableNetworkPolicy }}  
+  {{- if .Values.enableNetworkPolicy }}
   enableNetworkPolicy: {{ .Values.enableNetworkPolicy }}
   {{- end }}
   # specify rancher helm chart values deployed into downstream cluster
@@ -61,11 +61,11 @@ spec:
       {{- if $nodepool.labels }}
       labels:
 {{ toYaml $nodepool.labels | indent 8 }}
-      {{- end }}      
+      {{- end }}
       {{- if $nodepool.taints }}
       taints:
 {{ toYaml $nodepool.taints | indent 8 }}
-      {{- end }}         
+      {{- end }}
       machineConfigRef:
         {{- if eq $.Values.cloudprovider "amazonec2" }}
         kind: Amazonec2Config
@@ -244,3 +244,7 @@ spec:
         # timeout: 0
       workerConcurrency: "10%"
       controlPlaneConcurrency: "10%"
+    {{- if .Values.rkeConfig.additionalManifest }}
+    additionalManifest: |
+{{ .Values.rkeConfig.additionalManifest | indent 6 }}
+    {{- end }}
