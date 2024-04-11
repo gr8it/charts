@@ -34,16 +34,22 @@ Please, use [Makefile](./scripts/Makefile)
 
 > Don't forget to update helm chart version in Chart.yaml! Otherwise existing version will be replaced!
 
+Run (on the main branch):
+
 ```bash
 make -C scripts/ build
 ```
 
-### Publish to a helm repository
+### Publish to Github (raw)
+
+Everything required has been created on filesystem, just push your changes to the main branch (via pull request)
+
+### Publish to a helm repository (Gitlab, Harbor, Artifactory)
 
 To publish the all (local) charts to a remote helm repository such as Gitlab, Harbor, Artifactory, .. be sure to export environment variables for repo URL, user and password:
 
 ```bash
-export REPO_URL="https://git.pss.sk/api/v4/projects/490/packages/helm/stable"
+export REPO_URL="https://github.com/gr8it/charts/"
 export REPO_USERNAME="chartpusher"
 export REPO_TOKEN="asd1e41123h12ey8haodasd"
 ```
@@ -54,6 +60,13 @@ and run:
 make -C scripts/ publish
 ```
 
+## Using the Repo (Github)
+
+```bash
+helm repo add gr8it https://raw.githubusercontent.com/gr8it/charts/main/
+helm search repo gr8it -l
+```
+
 ## Operational guides for charting
 
 - [How to update, create and publish charts](/docs/update_create_publish_charts.md)
@@ -62,3 +75,4 @@ make -C scripts/ publish
 ## TODO
 
 - application-logging seems strongly PSS related = move to customer specific repo?
+- use helm chart repo <https://aspecta.atlassian.net/browse/SPEXAPC-961>
