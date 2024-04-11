@@ -1,6 +1,8 @@
 # rke2 cluster template
 
-Helm chart that can be used as rke2 cluster template
+Helm chart that can be used as rke2 cluster template.
+
+Is a fork of <https://github.com/rancher/cluster-template-examples>
 
 ## Reference documenation
 
