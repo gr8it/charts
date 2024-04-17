@@ -3,7 +3,6 @@ apiVersion: logging.banzaicloud.io/v1beta1
 kind: ClusterFlow
 metadata:
   name: loki-flow-app
-  cluster: {{ .Values.clusterName }}
   namespace: {{ .Values.namespace }}
 spec:
   filters:
