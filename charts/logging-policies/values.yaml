@@ -1,7 +1,7 @@
 namespace: cattle-logging-system
-# ${ .ClusterName }
+#clusterName: ${ .ClusterName }
 clusterName: CLUSTERNAME
-# ${ default .ClusterLabels.loki false }
+#clusterLabelLoki: ${ or (index .ClusterLabels "loki") false }
 clusterLabelLoki: false
 lokiServiceUrl: http://loki-gateway.loki.svc.cluster.local
 lokiIngressUrl: https://loki.CLUSTER.rancher.ENV.lab.gr8it.cloud
