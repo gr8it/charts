@@ -1,0 +1,22 @@
+apiVersion: logging.banzaicloud.io/v1beta1
+kind: ClusterFlow
+metadata:
+  name: loki-flow-audit
+  namespace: {{ .Values.namespace }}
+spec:
+  filters:
+  - tag_normaliser: {}
+  match:
+  - select:
+      {{- with .Values.systemNamespaces }}
+      namespaces:
+      {{- toYaml . | nindent 6 }}
+      {{- end }}
+      {{- with .Values.auditContainerNames }}
+      container_names:
+      {{- toYaml . | nindent 6 }}
+      {{- end }}
+      hosts: []
+      labels: {}
+  globalOutputRefs:
+  - loki-out-audit

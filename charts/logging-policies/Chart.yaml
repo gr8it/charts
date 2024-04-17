@@ -1,0 +1,9 @@
+apiVersion: v2
+name: logging-policies
+description: A Chart to setup ClusterOutput and ClusterFlow objects
+version: 1.0.0
+keywords:
+- rancher
+- loki
+- fluentd
+- log

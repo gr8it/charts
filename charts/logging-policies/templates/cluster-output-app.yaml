@@ -1,0 +1,33 @@
+
+{{- if ne (default .Values.clusterName "") "rancher" }}
+apiVersion: logging.banzaicloud.io/v1beta1
+kind: ClusterOutput
+metadata:
+  name: loki-out-app
+  namespace: {{ .Values.namespace }}
+spec:
+  loki:
+    url: {{ if eq ( .Values.clusterLabelLoki | toString ) "true" }} {{ .Values.lokiServiceUrl }} {{ else }} {{ .Values.lokiIngressUrl }} {{ end }}
+    tenant: app
+    configure_kubernetes_labels: true
+    insecure_tls: true
+    extra_labels:
+      cluster: {{ .Values.clusterName }}
+    buffer:
+      chunk_limit_size: 128MB
+      retry_forever: false
+      retry_timeout: 48h
+      timekey: 1m
+      timekey_use_utc: true
+      timekey_wait: 30s
+    username:
+      valueFrom:
+        secretKeyRef:
+          name: loki-tenant-app
+          key: username
+    password:
+      valueFrom:
+        secretKeyRef:
+          name: loki-tenant-app
+          key: password
+{{- end }}
