@@ -13,7 +13,7 @@ spec:
       {{- toYaml . | nindent 6 }}
       {{- end }}
   - select:
-    {{- if eq (default .Values.clusterName "") "rancher" }}
+    {{- if eq (default .Values.clusterName "") "local" }}
       namespaces: []
     {{- else }}
       {{- with .Values.systemNamespaces }}

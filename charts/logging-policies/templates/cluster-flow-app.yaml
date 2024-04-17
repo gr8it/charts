@@ -1,4 +1,4 @@
-{{- if ne (default .Values.clusterName "") "rancher" }}
+{{- if ne (default .Values.clusterName "") "local" }}
 apiVersion: logging.banzaicloud.io/v1beta1
 kind: ClusterFlow
 metadata:
