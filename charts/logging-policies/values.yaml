@@ -1,0 +1,22 @@
+namespace: cattle-logging-system
+#clusterName: ${ .ClusterName }
+clusterName: CLUSTERNAME
+#clusterLabelLoki: ${ or (index .ClusterLabels "loki") false }
+clusterLabelLoki: false
+lokiServiceUrl: http://loki-gateway.loki.svc.cluster.local
+lokiIngressUrl: https://loki.CLUSTER.rancher.ENV.lab.gr8it.cloud
+
+systemNamespaces:
+- cattle-dashboards
+- cattle-fleet-system
+- cattle-impersonation-system
+- cattle-logging-system
+- cattle-monitoring-system
+- cattle-neuvector-system
+- cattle-system
+- kube-node-lease
+- kube-public
+- kube-system
+auditContainerNames:
+- rancher-audit-log
+- kube-apiserver

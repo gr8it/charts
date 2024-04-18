@@ -1,0 +1,22 @@
+{{- if ne (default .Values.clusterName "") "local" }}
+apiVersion: logging.banzaicloud.io/v1beta1
+kind: ClusterFlow
+metadata:
+  name: loki-flow-app
+  namespace: {{ .Values.namespace }}
+spec:
+  filters:
+  - tag_normaliser: {}
+  match:
+  - exclude:
+      {{- with .Values.systemNamespaces }}
+      namespaces:
+      {{- toYaml . | nindent 6 }}
+      {{- end }}
+  - select:
+      container_names: []
+      hosts: []
+      labels: {}
+  globalOutputRefs:
+  - loki-out-app
+{{- end }}
