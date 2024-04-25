@@ -1,0 +1,21 @@
+apiVersion: logging-extensions.banzaicloud.io/v1alpha1
+kind: HostTailer
+metadata:
+  name: k8s-audit-log-tailer
+  namespace: {{ .Values.namespace }}
+spec:
+  fileTailers:
+    - name: k8s-audit-log
+      path: /var/lib/rancher/rke2/server/logs/audit.log
+  
+  workloadOverrides:
+    priorityClassName: hosttailer-priority
+    tolerations:
+    - key: node-role.kubernetes.io/control-plane
+      operator: Exists
+      effect: NoSchedule
+    - key: node-role.kubernetes.io/etcd
+      effect: NoExecute 
+
+    nodeSelector: 
+      node-role.kubernetes.io/control-plane: "true"
