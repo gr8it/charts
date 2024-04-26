@@ -19,4 +19,4 @@ systemNamespaces:
 - kube-system
 auditContainerNames:
 - rancher-audit-log
-- kube-apiserver
+- k8s-audit-log
