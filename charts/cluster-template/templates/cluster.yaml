@@ -194,14 +194,19 @@ spec:
       kube-controller-manager-arg: {{ .Values.rkeConfig.machineGlobalConfig.kubeControllerManagerArg }} 
       {{- end }}
       {{- if .Values.rkeConfig.machineGlobalConfig.secretsEncryption }} 
-      secrets-encryption: { {.Values.rkeConfig.machineGlobalConfig.secretsEncryption }}
+      secrets-encryption: {{.Values.rkeConfig.machineGlobalConfig.secretsEncryption }}
       {{- end }}
       tls-san: {{ .Values.rkeConfig.machineGlobalConfig.tlsSan }}
       audit-policy-file: {{ .Values.rkeConfig.machineGlobalConfig.auditPolicyFile }}
       profile: {{ .Values.rkeConfig.machineGlobalConfig.profile }}    
     
-    # machineSelectorConfig:
-    # - config:
+    {{- if .Values.rkeConfig.machineSelectorConfig }}
+    machineSelectorConfig:
+    {{- range .Values.rkeConfig.machineSelectorConfig }}
+      - config:
+          profile: {{ .config.profile }}
+    {{- end }}
+    {{- end }}
         # Node name
         # node-name: ""
         # Disable embedded containerd and use alternative CRI implementation
