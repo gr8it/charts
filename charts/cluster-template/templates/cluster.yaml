@@ -197,7 +197,8 @@ spec:
       secrets-encryption: {{.Values.rkeConfig.machineGlobalConfig.secretsEncryption }}
       {{- end }}
       tls-san: {{ .Values.rkeConfig.machineGlobalConfig.tlsSan }}
-      audit-policy-file: {{ .Values.rkeConfig.machineGlobalConfig.auditPolicyFile }}
+      audit-policy-file: |
+{{ .Values.rkeConfig.machineGlobalConfig.auditPolicyFile | indent 8}}
       profile: {{ .Values.rkeConfig.machineGlobalConfig.profile }}    
     
     {{- if .Values.rkeConfig.machineSelectorConfig }}

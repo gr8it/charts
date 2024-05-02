@@ -1,0 +1,311 @@
+cluster:
+  name: app
+  # specify cluster labels
+  labels:
+    cilium-hubble-ui-enterprise: "true"
+    logging: "true"
+    cert-manager: "true"
+    cert-manager-ca-vault: "true"
+    external-dns: "true"
+    f5-cis: "true"
+    # kafka: "true"
+    # kafkaoperator: "true"
+    kyverno: "true"
+    loki: "true"
+    miniooperator: "true"
+    miniotenant: "true"
+    mongodboperator: "true"
+    monitoring: "true"
+    vspherecsi: "true"
+    vspherecpi: "true"
+    # zabbix: "true"
+    grafanaoperator: "true"
+    grafana: "true"
+  annotations:
+    catalog.cattle.io/namespace: fleet-default
+kubernetesVersion: "v1.26.14+rke2r1"
+enableNetworkPolicy: true
+rancherValues: {}
+agentEnvs:
+  - name: http_proxy
+    value: "http://10.0.46.1:3128"
+  - name: https_proxy
+    value: "http://10.0.46.1:3128"
+  - name: no_proxy
+    value: "localhost,127.0.0.1,127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,.svc,.cluster.local,.lab.local,.lab.gr8it.cloud"
+  - name: HTTP_PROXY
+    value: "http://10.0.46.1:3128"
+  - name: HTTPS_PROXY
+    value: "http://10.0.46.1:3128"
+  - name: NO_PROXY
+    value: "localhost,127.0.0.1,127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,.svc,.cluster.local,.lab.local,.lab.gr8it.cloud"
+rkeConfig:
+  chartValues:
+    rke2-ingress-nginx:
+      controller:
+        allowSnippetAnnotations: "true"
+        config:
+          use-forwarded-headers: "true"
+        service:
+          enabled: "true"
+          type: NodePort
+        extraArgs:
+          publish-status-address: 10.0.45.58
+
+  additionalManifest: |
+
+    apiVersion: helm.cattle.io/v1
+    kind: HelmChart
+    metadata:
+      name: cilium-enterprise
+      namespace: kube-system
+    spec:
+      bootstrap: true
+      chart: cilium
+      repo: https://helm.isovalent.com
+      version: 1.14.9
+      targetNamespace: kube-system
+      timeout: 10m
+      valuesContent: |
+
+        hubble:
+          enabled: true
+          relay:
+            enabled: true
+            tls:
+              server:
+                enabled: true
+                mtls: false
+            prometheus:
+              enabled: true
+              # serviceMonitor:
+              #   enabled: true
+          tls:
+            enabled: true
+            auto:
+              enabled: true
+              method: cronJob
+              ## Not working, as Certmanager won't issue certificates for *.hubble-relay.cilium.io
+              # method: certmanager
+              # certManagerIssuerRef:
+              #   group: cert-manager.io
+              #   kind: ClusterIssuer
+              #   name: vault.lab.gr8it.cloud
+          ui:
+            enabled: false
+          metrics:
+            enabled:
+            - dns:query;ignoreAAAA
+            # - drop
+            - drop:sourceContext=identity;destinationContext=identity
+            - tcp
+            - flow
+            - port-distribution
+            - icmp
+            # Enable additional labels for L7 flows
+            - 'httpV2:exemplars=true;labelsContext=source_ip,source_namespace,source_workload,destination_ip,destination_namespace,destination_workload,traffic_direction;sourceContext=workload-name|reserved-identity;destinationContext=workload-name|reserved-identity'
+            # Enterprise only, refer to Monitor Flow Export docs
+            - flow_export
+            enableOpenMetrics: true
+            # serviceMonitor:
+            #   enabled: true
+            dashboards:
+              enabled: true
+              # namespace: grafana
+          prometheus:
+            enabled: true
+            serviceMonitor:
+              enabled: true
+        nodeinit:
+          enabled: true
+
+        ipam:
+          mode: kubernetes
+
+        # egress GTW
+        bpf:
+          masquerade: true
+
+        # to be migrated to egressGatewayHA and deleted
+        egressGateway:
+          enabled: true
+        enterprise:
+          egressGatewayHA:
+            enabled: true
+            # healthcheckTimeout: 1s # Defaults to '2s'
+        kubeProxyReplacement: "true"
+
+        k8s:
+          # -- requireIPv4PodCIDR enables waiting for Kubernetes to provide the PodCIDR
+          # range via the Kubernetes node resource
+          requireIPv4PodCIDR: false
+          # -- requireIPv6PodCIDR enables waiting for Kubernetes to provide the PodCIDR
+          # range via the Kubernetes node resource
+          requireIPv6PodCIDR: false
+
+        l2announcements:
+          enabled: false
+
+        prometheus:
+          enabled: true
+          # serviceMonitor:
+          #   enabled: true
+          ## metrics: "~"
+
+        dashboards:
+          enabled: true
+          # namespace: grafana
+
+        operator:
+          prometheus:
+            enabled: true
+            # serviceMonitor:
+            #   enabled: true
+          dashboards:
+            enabled: true
+            # namespace: grafana
+
+        l7Proxy: false
+
+        encryption:
+          enabled: false
+          type: wireguard
+          nodeEncryption: false
+
+        # tls:
+        #   caBundle:
+        #     enabled: true
+        #     # Name of the ConfigMap containing the CA trust bundle.
+        #     name: ca-cert-bundle
+        #     # Entry of the ConfigMap containing the CA trust bundle.
+        #     key: ca_bundle.pem
+
+  etcd:
+    disableSnapshots: true
+    # snapshotRetention: 4
+    # snapshotScheduleCron: "0 0 * * *"
+  machineGlobalConfig:
+    # TG added policy for audit logging - https://www.suse.com/support/kb/doc/?id=000021171
+    auditPolicyFile: >- 
+      {"apiVersion":"audit.k8s.io/v1","kind":"Policy","omitStages":["RequestReceived"],"rules":[{"level":"RequestResponse","resources":[{"group":"","resources":["pods"]}]},{"level":"Metadata","resources":[{"group":"","resources":["pods/log","pods/status"]}]},{"level":"None","resources":[{"group":"","resources":["configmaps"],"resourceNames":["controller-leader"]}]},{"level":"None","users":["system:kube-proxy"],"verbs":["watch"],"resources":[{"group":"","resources":["endpoints","services"]}]},{"level":"None","userGroups":["system:authenticated"],"nonResourceURLs":["/api*","/version"]},{"level":"Request","resources":[{"group":"","resources":["configmaps"]}],"namespaces":["kube-system"]},{"level":"Metadata","resources":[{"group":"","resources":["secrets","configmaps"]}]},{"level":"Request","resources":[{"group":""},{"group":"extensions"}]},{"level":"Metadata","omitStages":["RequestReceived"]}]}
+
+    cni: none
+    tlsSan:
+      - api.app.rancher.dev.sp.lab.gr8it.cloud
+  workerConfig: []
+  localClusterAuthEndpoint:
+    enabled: true
+    fqdn: api.app.rancher.dev.sp.lab.gr8it.cloud:6443
+    # caCerts: ""
+  upgradeStrategy:
+    controlPlaneDrainOptions:
+      enabled: false
+    workerDrainOptions:
+      enabled: false
+    workerConcurrency: "1"
+monitoring:
+  enabled: false
+cloudprovider: "vsphere"
+nodepools:
+- etcd: true
+  controlplane: true
+  labels:
+    "egressgtw": "true"
+  taints: {}
+  quantity: 3
+  paused: false
+  name: rancher-dev-app-control-plane-etcd
+  cloneFrom: "/aspecta-lab/vm/private-cloud/rke-proxy-ubuntu-22.04-2403081305"
+  # Contents of cloud-config yaml file to put into the ISO user-data; Format should be:
+  # cloudConfig: |
+  #   #cloud-config
+  #   write_files:
+  #     - path: /root/install.sh
+  #       content: |
+  #         #!/bin/bash
+  #         echo "127.0.0.1    localhost" >> /etc/hosts
+  #         echo "::1    localhost" >> /etc/hosts
+  #   runcmd:
+  #     - bash /root/install.sh
+  # contentLibrary: "lab"
+  cpuCount: "4"
+  creationType: "template"
+  datacenter: "/aspecta-lab"
+  datastore: "/aspecta-lab/datastore/DatastorevSAN"
+  diskSize: "30000"
+  folder: "/aspecta-lab/vm/private-cloud/rancher/dev"
+  memorySize: "8192"
+  network:
+    - "/aspecta-lab/network/DSwitch_LAB-data_VLAN46"
+  pool: "/aspecta-lab/host/lab-blade-cluster02/Resources/private-cloud"
+  sshPort: "22"
+  sshUser: rancher
+  sshUserGroup: staff
+- worker: true
+  taints: {}
+  labels:
+    topology.kubernetes.io/region: "bratislava"
+    topology.kubernetes.io/zone: "vivo"
+  quantity: 2
+  paused: false
+  name: rancher-dev-app-worker-vivo
+  cloneFrom: "/aspecta-lab/vm/private-cloud/rke-proxy-ubuntu-22.04-2403081305"
+  # Contents of cloud-config yaml file to put into the ISO user-data; Format should be:
+  # cloudConfig: |
+  #   #cloud-config
+  #   write_files:
+  #     - path: /root/install.sh
+  #       content: |
+  #         #!/bin/bash
+  #         echo "127.0.0.1    localhost" >> /etc/hosts
+  #         echo "::1    localhost" >> /etc/hosts
+  #   runcmd:
+  #     - bash /root/install.sh
+  # contentLibrary: "lab"
+  cpuCount: "6"
+  creationType: "template"
+  datacenter: "/aspecta-lab"
+  datastore: "/aspecta-lab/datastore/DatastorevSAN"
+  diskSize: "30000"
+  folder: "/aspecta-lab/vm/private-cloud/rancher/dev"
+  memorySize: "16000"
+  network:
+    - "/aspecta-lab/network/DSwitch_LAB-data_VLAN46"
+  pool: "/aspecta-lab/host/lab-blade-cluster02/Resources/private-cloud"
+  sshPort: "22"
+  sshUser: rancher
+  sshUserGroup: staff
+- worker: true
+  taints: {}
+  labels:
+    topology.kubernetes.io/region: "bratislava"
+    topology.kubernetes.io/zone: "bsp"
+  quantity: 2
+  paused: false
+  name: rancher-dev-app-worker-bsp
+  cloneFrom: "/aspecta-lab/vm/private-cloud/rke-proxy-ubuntu-22.04-2403081305"
+  # Contents of cloud-config yaml file to put into the ISO user-data; Format should be:
+  # cloudConfig: |
+  #   #cloud-config
+  #   write_files:
+  #     - path: /root/install.sh
+  #       content: |
+  #         #!/bin/bash
+  #         echo "127.0.0.1    localhost" >> /etc/hosts
+  #         echo "::1    localhost" >> /etc/hosts
+  #   runcmd:
+  #     - bash /root/install.sh
+  # contentLibrary: "lab"
+  cpuCount: "6"
+  creationType: "template"
+  datacenter: "/aspecta-lab"
+  datastore: "/aspecta-lab/datastore/DatastorevSAN"
+  diskSize: "30000"
+  folder: "/aspecta-lab/vm/private-cloud/rancher/dev"
+  memorySize: "16000"
+  network:
+    - "/aspecta-lab/network/DSwitch_LAB-data_VLAN46"
+  pool: "/aspecta-lab/host/lab-blade-cluster02/Resources/private-cloud"
+  sshPort: "22"
+  sshUser: rancher
+  sshUserGroup: staff
