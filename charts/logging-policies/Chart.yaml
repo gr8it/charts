@@ -1,7 +1,7 @@
 apiVersion: v2
 name: logging-policies
 description: A Chart to setup ClusterOutput and ClusterFlow objects
-version: 1.0.2
+version: 1.0.12
 keywords:
 - rancher
 - loki
