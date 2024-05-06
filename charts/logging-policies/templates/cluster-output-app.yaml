@@ -10,7 +10,15 @@ spec:
     url: {{ if eq ( .Values.clusterLabelLoki | toString ) "true" }} {{ .Values.lokiServiceUrl }} {{ else }} {{ .Values.lokiIngressUrl }} {{ end }}
     tenant: app
     configure_kubernetes_labels: true
-    insecure_tls: true
+    
+    # verify server certificate
+    insecure_tls: false
+    ca_cert:
+      mountFrom:
+        secretKeyRef:
+          key: ca.crt
+          name: ca-cert-bundle
+
     extra_labels:
       cluster: {{ .Values.clusterName }}
     buffer:
