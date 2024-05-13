@@ -166,7 +166,7 @@ spec:
         folder: {{ .Values.rkeConfig.etcd.S3.folder }}
         region: {{ .Values.rkeConfig.etcd.S3.region }}
         skipSSLVerify: {{ .Values.rkeConfig.etcd.S3.skipSSLVerify }}
-        {{- end }}    
+        {{- end }}
     machineGlobalConfig:
       cluster-cidr: {{ .Values.rkeConfig.machineGlobalConfig.clusterCidr }}
       cluster-dns: {{ .Values.rkeConfig.machineGlobalConfig.clusterDns }}
@@ -174,15 +174,15 @@ spec:
       cni: {{ .Values.rkeConfig.machineGlobalConfig.cni }}
       disable: {{ .Values.rkeConfig.machineGlobalConfig.disable }}
       disable-kube-proxy: {{ .Values.rkeConfig.machineGlobalConfig.disableKubeProxy }}
-      {{- if .Values.rkeConfig.machineGlobalConfig.etcdExposeMetrics }} 
+      {{- if .Values.rkeConfig.machineGlobalConfig.etcdExposeMetrics }}
       etcd-expose-metrics: {{ .Values.rkeConfig.machineGlobalConfig.etcdExposeMetrics }} 
-      {{- end }}     
-      {{- if .Values.rkeConfig.machineGlobalConfig.etcdExposeMetrics }} 
+      {{- end }}
+      {{- if .Values.rkeConfig.machineGlobalConfig.etcdExposeMetrics }}
       service-node-port-range: {{ .Values.rkeConfig.machineGlobalConfig.serviceNodePortRange }}
-      {{- end }}   
-      {{- if .Values.rkeConfig.machineGlobalConfig.serviceCidr }} 
-      service-cidr: {{ .Values.rkeConfig.machineGlobalConfig.serviceCidr }} 
-      {{- end }}   
+      {{- end }}
+      {{- if .Values.rkeConfig.machineGlobalConfig.serviceCidr }}
+      service-cidr: {{ .Values.rkeConfig.machineGlobalConfig.serviceCidr }}
+      {{- end }}
   
       {{- if .Values.rkeConfig.machineGlobalConfig.kubeApiserverArg }}
       kube-apiserver-arg: {{ .Values.rkeConfig.machineGlobalConfig.kubeApiserverArg }}
@@ -190,15 +190,17 @@ spec:
       {{- if .Values.rkeConfig.machineGlobalConfig.kubeSchedulerArg }}
       kube-scheduler-arg: {{ .Values.rkeConfig.machineGlobalConfig.kubeSchedulerArg }}
       {{- end }}
-      {{- if .Values.rkeConfig.machineGlobalConfig.kubeControllerManagerArg }} 
+      {{- if .Values.rkeConfig.machineGlobalConfig.kubeControllerManagerArg }}
       kube-controller-manager-arg: {{ .Values.rkeConfig.machineGlobalConfig.kubeControllerManagerArg }} 
       {{- end }}
-      {{- if .Values.rkeConfig.machineGlobalConfig.secretsEncryption }} 
+      {{- if .Values.rkeConfig.machineGlobalConfig.secretsEncryption }}
       secrets-encryption: {{.Values.rkeConfig.machineGlobalConfig.secretsEncryption }}
       {{- end }}
       tls-san: {{ .Values.rkeConfig.machineGlobalConfig.tlsSan }}
+      {{- if .Values.rkeConfig.machineGlobalConfig.auditPolicyFile }}
       audit-policy-file: >
 {{ .Values.rkeConfig.machineGlobalConfig.auditPolicyFile | indent 8}}
+      {{- end }}
       profile: {{ .Values.rkeConfig.machineGlobalConfig.profile }}
     
     {{- if .Values.rkeConfig.machineSelectorConfig }}
