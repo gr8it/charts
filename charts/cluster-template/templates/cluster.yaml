@@ -53,11 +53,17 @@ spec:
     {{- if ne .Values.cloudprovider "custom" }}
     machinePools:
     {{- if .Values.nodepools }} {{ range $index, $nodepool := .Values.nodepools }}
-    - controlPlaneRole: {{ default "false" $nodepool.controlplane }}
-      etcdRole: {{ default "false" $nodepool.etcd }}
-      workerRole: {{ default "false" $nodepool.worker }}
+    - name: {{ $nodepool.name }}
+      {{- if $nodepool.controlplane }}
+      controlPlaneRole: {{ $nodepool.controlplane }}
+      {{- end }}
+      {{- if $nodepool.etcd }}
+      etcdRole: {{ $nodepool.etcd }}
+      {{- end }}
+      {{- if $nodepool.worker }}
+      workerRole: {{ $nodepool.worker }}
+      {{- end }}
       quantity: {{ $nodepool.quantity }}
-      name: {{ $nodepool.name }}
       {{- if $nodepool.labels }}
       labels:
 {{ toYaml $nodepool.labels | indent 8 }}
@@ -99,11 +105,17 @@ spec:
     {{- end }}
     {{- if .Values.nodepool }}
     {{ $nodepool := .Values.nodepool }}
-    - controlPlaneRole: {{ $nodepool.controlplane }}
+    - name: {{ $nodepool.name }}
+      {{- if $nodepool.controlplane }}
+      controlPlaneRole: {{ $nodepool.controlplane }}
+      {{- end }}
+      {{- if $nodepool.controlplane }}
       etcdRole: {{ $nodepool.etcd }}
+      {{- end }}
+      {{- if $nodepool.controlplane }}
       workerRole: {{ $nodepool.worker }}
+      {{- end }}
       quantity: {{ $nodepool.quantity }}
-      name: {{ $nodepool.name }}
       {{- if $nodepool.labels }}
       labels:
 {{ toYaml $nodepool.labels | indent 8 }}
