@@ -1,0 +1,100 @@
+# https://quickref.me/yaml
+items:
+- ~
+- null
+
+- integer: 12345
+- hexa: 0x12345
+- octa: 012345
+- float: 123.45
+- exp:  12.34e+5
+
+- string_no_quotes: bar
+- string_quotes: 'bar "baz"'
+- string_doublequotes: "bar \"baz\""
+- string_typed: !!str bar
+- string_with_newline: "foo\nbar"
+
+- literal_multiline_single_new_line: |
+    bar
+    baz
+    
+    
+- literal_multiline_keep_new_line: |+
+    bar
+    baz
+    
+    
+- literal_multiline_strip_new_line: |-
+    bar
+    baz
+    
+    
+- folded_multiline_single_new_line: >
+    bar
+    baz
+    
+    
+- folded_multiline_keep_new_line: >+
+    bar
+    baz
+    
+    
+- folded_multiline_strip_new_line: >-
+    bar
+    baz
+    
+    
+- bool_true: True
+- bool_false: False
+- bool_on: On
+- bool_off: Off
+
+- {}
+- dict_empty: {}
+- dict_flow_style: {foo: bar, "bar": "baz", 'baz': 'bar'}
+- dict:
+    foo: bar
+    "bar": "baz"
+    'baz': 'bar'
+
+# not working - helm parsing error = error unmarshaling JSON: while decoding JSON: json: cannot unmarshal array into Go value of type releaseutil.SimpleHead
+# - []
+- list_empty: []
+- list_flow_style: [foo, "bar", 'baz']
+- list:
+  - foo
+  - "bar"
+  - 'baz'
+
+- set: !!set
+    ? one
+    ? two
+- set2: !!set {'one', "two"}
+
+- ordered_map: !!omap
+    - Mark McGwire: 65
+    - Sammy Sosa: 63
+    - Ken Griffy: 58
+
+# anchor and alias must be the same
+- string_anchor: &foo bar
+- string_alias: *foo
+
+- dict_anchor: &food 
+    foo: bar
+- dict_alias: *food
+- dict_alias_override:
+    <<: *food
+    foo: baz
+    bar: foo
+
+- date: 2015-04-05
+
+# not working - helm parsing error = error converting YAML to JSON: yaml: cannot decode !!null `` as a !!timestamp
+# - timestamp: !!timestamp
+
+# not working - helm parsing error = error converting YAML to JSON: json: unsupported value
+# - foo: .inf
+# - bar: -.Inf
+# - plop: .NAN
