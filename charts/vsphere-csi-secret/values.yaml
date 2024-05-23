@@ -2,3 +2,5 @@ clusterName: CLUSTERNAME
 insecureFlag: false
 dataCenters: "/dataCenter"
 virtualCenter: VirtualCenter
+secretStore: secretStoreName
+vaultPath: "path/to/vault"
