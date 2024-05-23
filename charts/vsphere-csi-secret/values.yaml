@@ -1,0 +1,4 @@
+clusterName: CLUSTERNAME
+insecureFlag: false
+dataCenters: "/dataCenter"
+virtualCenter: VirtualCenter
