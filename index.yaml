@@ -225,28 +225,4 @@ entries:
     urls:
     - packaged_charts/vsphere-csi-secret-1.0.2.tgz
     version: 1.0.2
-  - apiVersion: v2
-    created: "2024-05-24T11:49:08.718705+02:00"
-    description: A Chart to setup Vsphere CSI secret
-    digest: 3206fb77f8c0bf10eff3f7c9c34d3dd4a63958849ad7d34db27861b98cdec99b
-    keywords:
-    - rancher
-    - external-secrets
-    - vsphere
-    name: vsphere-csi-secret
-    urls:
-    - packaged_charts/vsphere-csi-secret-1.0.1.tgz
-    version: 1.0.1
-  - apiVersion: v2
-    created: "2024-05-24T11:49:08.718504+02:00"
-    description: A Chart to setup Vsphere CSI secret
-    digest: 327d02a85c3f5ea3463588d3d7687bd11df68a1eefc83a98a0ca27815d642da0
-    keywords:
-    - rancher
-    - external-secrets
-    - vsphere
-    name: vsphere-csi-secret
-    urls:
-    - packaged_charts/vsphere-csi-secret-1.0.0.tgz
-    version: 1.0.0
 generated: "2024-05-24T11:49:08.710897+02:00"
