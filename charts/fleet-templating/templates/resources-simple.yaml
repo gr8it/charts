@@ -1,0 +1,6 @@
+# MINIO TENANT
+{{- range .Values.items }}
+---
+{{- toYaml .}}
+
+{{- end }}
