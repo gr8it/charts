@@ -1,0 +1,6 @@
+# MINIO TENANT
+{{- range .Values.items }}
+---
+{{- include "resource.render" (dict "value" . "context" $) }}
+
+{{- end }}

@@ -1,6 +1,0 @@
-# MINIO TENANT
-{{- range .Values.items }}
----
-{{- include "thanos.render" (dict "value" . "context" $) }}
-
-{{- end }}

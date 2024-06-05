@@ -1,4 +1,4 @@
 apiVersion: v1
 name: fleet-templating
-description: Very simple helm chart renders input resources as is. Should be used with fleet templating to enable templating in otherwise static manifests
-version: "1.0"
+description: Helm chart renders input resources as is. Should be used with fleet templating to enable templating in otherwise static manifests
+version: 1.0.0
