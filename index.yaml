@@ -56,6 +56,28 @@ entries:
     apiVersion: v1
     created: "2024-06-05T11:27:48.812935329+02:00"
     description: Cluster template for rke2
+    digest: 1a67b459d395e28d21f477b37e62c54947909d63b596bb2d1ccd18a5309be4f2
+    name: cluster-template
+    urls:
+    - packaged_charts/cluster-template-1.0.14.tgz
+    version: 1.0.14
+  - annotations:
+      catalog.cattle.io/namespace: fleet-default
+      catalog.cattle.io/type: cluster-template
+    apiVersion: v1
+    created: "2024-06-04T00:25:42.898243358+02:00"
+    description: Cluster template for rke2
+    digest: 3ba9d2783bf39bec55ee38ae5865c4cbee2869c6135bc400d58b8e203674be2e
+    name: cluster-template
+    urls:
+    - packaged_charts/cluster-template-1.0.13.tgz
+    version: 1.0.13
+  - annotations:
+      catalog.cattle.io/namespace: fleet-default
+      catalog.cattle.io/type: cluster-template
+    apiVersion: v1
+    created: "2024-06-04T00:25:42.895701528+02:00"
+    description: Cluster template for rke2
     digest: 6fd05ea3970fa65eda39e26374840d269194fab5954e38a62b9f832f98ff2865
     name: cluster-template
     urls:
@@ -174,6 +196,20 @@ entries:
     created: "2024-06-05T11:27:48.816514007+02:00"
     description: A Chart to install MongoDB Express, uses credentials stored in a
       secret created by MongoDB community operator
+    digest: 358ad93f9d748eb8283f738374d18a010843a1575f7b811af1559785755586bf
+    keywords:
+    - mongodb
+    - express
+    - client
+    name: mongodb-express
+    urls:
+    - packaged_charts/mongodb-express-1.1.1.tgz
+    version: 1.1.1
+  - apiVersion: v2
+    appVersion: 1.0.0-20
+    created: "2024-06-04T00:25:42.94265266+02:00"
+    description: A Chart to install MongoDB Express, uses credentials stored in a
+      secret created by MongoDB community operator
     digest: 4658ba387cd9fc8f6c9c0111623db5dd1a39e1e8ee4597aa435ca74aad030515
     keywords:
     - mongodb
@@ -211,4 +247,17 @@ entries:
     urls:
     - packaged_charts/rancher-audit-log-forwarder-1.0.0.tgz
     version: 1.0.0
+  vsphere-csi-secret:
+  - apiVersion: v2
+    created: "2024-06-04T00:25:42.943823946+02:00"
+    description: A Chart to setup Vsphere CSI secret
+    digest: 696b3fbf25cc363e2dae5b27cf741c6dde34c5be022db3316f1b2cf154a6b020
+    keywords:
+    - rancher
+    - external-secrets
+    - vsphere
+    name: vsphere-csi-secret
+    urls:
+    - packaged_charts/vsphere-csi-secret-1.0.2.tgz
+    version: 1.0.2
 generated: "2024-06-05T11:27:48.811639766+02:00"

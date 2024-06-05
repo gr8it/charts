@@ -34,7 +34,8 @@ diskSize: {{ $nodepool.diskSize | quote }}
 folder: {{ $nodepool.folder }}
 hostsystem: {{ $nodepool.hostsystem }}
 memorySize: {{ $nodepool.memorySize | quote }}
-network: {{ $nodepool.network }}
+network:
+{{ toYaml $nodepool.network | indent 2 }}
 pool: {{ $nodepool.pool }}
 sshPort: {{ $nodepool.sshPort | quote }}
 sshUser: {{ $nodepool.sshUser }}
@@ -84,7 +85,8 @@ diskSize: {{ $nodepool.diskSize | quote }}
 folder: {{ $nodepool.folder }}
 hostsystem: {{ $nodepool.hostsystem }}
 memorySize: {{ $nodepool.memorySize | quote }}
-network: {{ $nodepool.network }}
+network:
+{{ toYaml $nodepool.network | indent 2 }}
 pool: {{ $nodepool.pool }}
 sshPort: {{ $nodepool.sshPort | quote }}
 sshUser: {{ $nodepool.sshUser }}
@@ -98,5 +100,3 @@ vcenter: {{ $nodepool.vcenter }}
 vcenterPort: {{ $nodepool.vcenterPort }}
 {{- end }}
 {{- end }}
-
-

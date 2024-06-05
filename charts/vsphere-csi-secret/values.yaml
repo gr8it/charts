@@ -1,0 +1,8 @@
+clusterName: CLUSTERNAME
+customer: ASPECTA
+environment: DEV
+insecureFlag: false
+dataCenters: "/dataCenter"
+virtualCenter: VirtualCenter
+secretStore: secretStoreName
+vaultPath: "path/to/vault"
