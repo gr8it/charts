@@ -1,0 +1,20 @@
+enabled: true
+azAffinity: "localOnly"
+# list of objects containing namespace and ip to source nat all outgoing egress traffic to
+#  - namespace: kafka
+#    ip: 
+#      - 10.90.31.50
+#      - 10.90.31.51
+#    azAffinity
+IsovalentEgressGatewayPolicies:
+  - namespace: app1
+    ip: 
+      - 10.90.31.50
+      - 10.90.31.51
+    azAffinity:  
+  - namespace: app2
+    ip: 
+      - 10.90.31.52
+      - 10.90.31.53
+    azAffinity: Disabled
+  

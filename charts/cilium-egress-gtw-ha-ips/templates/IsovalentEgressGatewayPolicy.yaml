@@ -1,0 +1,24 @@
+{{- if .Values.enabled }}
+{{- range .Values.IsovalentEgressGatewayPolicies }}
+apiVersion: cilium.io/v1
+kind: IsovalentEgressGatewayPolicy
+metadata:
+  name: {{ .namespace }}-egw-policy
+spec:
+  destinationCIDRs:
+    - 0.0.0.0/0
+  selectors:
+    - podSelector:
+        matchLabels:
+          io.kubernetes.pod.namespace: {{ .namespace }}
+  azAffinity: {{ .azAffinity | default $.Values.azAffinity }}
+egressGroups:
+{{- range .ip }}
+  - nodeSelector:
+      matchLabels:
+        egressgtw: "true"
+    egressIP: {{ . }}
+  {{- end }}
+---
+{{- end }}
+{{- end }}
