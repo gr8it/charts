@@ -11,7 +11,7 @@ spec:
     - podSelector:
         matchLabels:
           io.kubernetes.pod.namespace: {{ .namespace }}
-  azAffinity: {{ .azAffinity | default $.Values.azAffinity }}
+  azAffinity: {{ .azAffinity | default $.Values.azAffinity | default "localOnlyFirst" }}
 egressGroups:
 {{- range .ip }}
   - nodeSelector:
