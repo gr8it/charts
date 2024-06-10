@@ -13,7 +13,7 @@ spec:
           io.kubernetes.pod.namespace: {{ .namespace }}
   azAffinity: {{ .azAffinity | default $.Values.azAffinity | default "localOnlyFirst" }}
 egressGroups:
-{{- range .ip }}
+{{- range .ips }}
   - nodeSelector:
       matchLabels:
         egressgtw: "true"
