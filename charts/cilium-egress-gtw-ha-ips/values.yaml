@@ -1,0 +1,9 @@
+enabled: true
+azAffinity: 
+# List of objects containing namespace and ip to source nat all outgoing egress traffic to specific egress IPs. Global azAffinity value can be overridden per namespace. 
+#  - namespace: kafka
+#    ips: 
+#      - 10.90.31.50
+#      - 10.90.31.51
+#    azAffinity: 
+IsovalentEgressGatewayPolicies: []
