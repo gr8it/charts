@@ -156,6 +156,16 @@ entries:
     urls:
     - packaged_charts/cluster-template-1.0.6.tgz
     version: 1.0.6
+  fleet-templating:
+  - apiVersion: v1
+    created: "2024-06-05T11:27:48.815673289+02:00"
+    description: Helm chart renders input resources as is. Should be used with fleet
+      templating to enable templating in otherwise static manifests
+    digest: fb40875ca13cbb02293b3bc33ad1d5837cd3e35da0df92e8bb43dac8415a60c8
+    name: fleet-templating
+    urls:
+    - packaged_charts/fleet-templating-1.0.0.tgz
+    version: 1.0.0
   logging-policies:
   - apiVersion: v2
     created: "2024-06-10T12:06:45.232279+02:00"
