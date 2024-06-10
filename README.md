@@ -8,33 +8,20 @@
 
 ### List of helm chart packages provided from gitlab
 
-- [active directory authentication provider](charts/active-directory/)
-- [application logging](charts/application-logging/)
-- [checkpoint registrator](charts/checkpoint-registrator/)
-- [rke2 cluster template](charts/cluster-template/)
-- [egress ips](charts/egress-ips/)
-- [mongodb express](charts/mongodb-express/)
-- [rancher audit log](charts/rancher-audit-log/)
-
-## Usage
-
-### Helm chart from remote location
-
-Refer to Helm chart package using url, e.g.:
-
-```txt
-helm template ad https://github.com/gr8it/charts/raw/main/active-directory-auth-provider-1.0.0.tgz
-```
-
-> Note: to get the URL, navigate to this repo on github.com, select particular chart, right click raw icon and select Copy link address (or similar)
+- [active directory authentication provider](charts/active-directory-auth-provider/README.md)
+- [application logging](charts/application-logging/README.md)
+- [checkpoint registrator](charts/checkpoint-registrator/README.md)
+- [rke2 cluster template](charts/cluster-template/README.md)
+- [cilium egress gtw ips](charts/cilium-egress-gtw-ips/README.md)
+- [mongodb express](charts/mongodb-express/README.md)
+- [rancher audit log forwarder](charts/rancher-audit-log-forwarder/README.md)
+- [fleet templating](charts/fleet-templating/README.md) - extra / additional manifests universal chart
 
 ## Build a new helm chart package
 
-Please, use [Makefile](./scripts/Makefile)
+> Don't forget to update helm chart version in Chart.yaml! Otherwise the helm Chart won't be build
 
-> Don't forget to update helm chart version in Chart.yaml! Otherwise existing version will be replaced!
-
-Run (on the main branch):
+Run:
 
 ```bash
 make -C scripts/ build
@@ -42,7 +29,7 @@ make -C scripts/ build
 
 ### Publish to Github (raw)
 
-Everything required has been created on filesystem, just push your changes to the main branch (via pull request)
+Everything required has been created on filesystem (index.yaml + packaged_charts/*.tgz), just push your changes to the main branch (via pull request)
 
 ### Publish to a helm repository (Gitlab, Harbor, Artifactory)
 
@@ -60,12 +47,45 @@ and run:
 make -C scripts/ publish
 ```
 
-## Using the Repo (Github)
+## Usage
+
+### Github repo
+
+Refers to the Git repo as a helm repository:
 
 ```bash
 helm repo add gr8it https://raw.githubusercontent.com/gr8it/charts/main/
 helm search repo gr8it -l
 ```
+
+or replace main branch, with feature branch of your choice
+
+> Note: to get the URL, navigate to this repo on github.com, select README.md file, right click raw icon and select Copy link address (or similar) and remove the README.md part.
+
+### Helm chart from remote location
+
+Usage of **[Github repo](#github-repo) method is preferred** to this, as it leaves more space for repo reorganization without the need to change code. Refer to Helm chart package using url, e.g.:
+
+```txt
+helm template ad https://github.com/gr8it/charts/raw/main/active-directory-auth-provider-1.0.0.tgz
+```
+
+or replace main branch, with feature branch of your choice
+
+> Note: to get the URL, navigate to this repo on github.com, select particular chart .tgz stored in packaged_charts/ directory, right click raw icon and select Copy link address (or similar)
+
+### Fleet usage
+
+Similar to the [Github repo](#github-repo) method, define repo and chart + version in fleet.yaml:
+
+```yaml
+helm:
+  repo: https://raw.githubusercontent.com/gr8it/charts/main/
+  chart: cluster-template
+  version: 1.0.14
+```
+
+or replace main branch, with feature branch of your choice
 
 ## Operational guides for charting
 
