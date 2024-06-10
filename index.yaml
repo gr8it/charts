@@ -2,7 +2,7 @@ apiVersion: v1
 entries:
   active-directory-auth-provider:
   - apiVersion: v2
-    created: "2024-06-10T12:06:45.223998+02:00"
+    created: "2024-06-10T15:39:57.698254+02:00"
     description: A Chart to enable Rancher Active Directory Auth Provider & Enable
       Global Role Binding for Admin group
     digest: 84f203517cd592dae6d2a821d256df163db935da6e4e932e70037d0d27e93296
@@ -16,7 +16,7 @@ entries:
     version: 1.0.0
   application-logging:
   - apiVersion: v2
-    created: "2024-06-10T12:06:45.224343+02:00"
+    created: "2024-06-10T15:39:57.698606+02:00"
     description: Collection of logs using ClusterFlow from pods from specified application
       namespaces and sending them to specified ClusterOutputs - Elastic (Kibana) and
       SIEM
@@ -28,7 +28,7 @@ entries:
     version: 1.1.0
   checkpoint-registrator:
   - apiVersion: v2
-    created: "2024-06-10T12:06:45.22479+02:00"
+    created: "2024-06-10T15:39:57.699142+02:00"
     description: Application registers k8s cluster in Checkpoint's infinity portal
     digest: ed73b7f2b305ad5358e102125f6ee621dc472fc73e2eca62c1ff7073f7d39435
     name: checkpoint-registrator
@@ -38,7 +38,7 @@ entries:
     version: 1.2.0
   cilium-egress-gtw-ha-ips:
   - apiVersion: v2
-    created: "2024-06-10T12:06:45.225129+02:00"
+    created: "2024-06-10T15:39:57.699497+02:00"
     description: A Chart to setup per namespace egress IPs using Cilium Enterprise
       IsovalentEgressGatewayPolicies
     digest: dd68c4218889f667248c58bcbb787bd3691e290530b79938f202b1763b5aeaf1
@@ -51,23 +51,9 @@ entries:
     urls:
     - packaged_charts/cilium-egress-gtw-ha-ips-1.0.1.tgz
     version: 1.0.1
-  - apiVersion: v2
-    created: "2024-06-10T12:06:45.22502+02:00"
-    description: A Chart to setup per namespace egress IPs using Cilium Enterprise
-      IsovalentEgressGatewayPolicies
-    digest: 409f3ee56222bc9b68b0f92e28b90d2613fd00b5b01ff75205584a1df3899f44
-    keywords:
-    - rancher
-    - cilium
-    - enterprise
-    - egress
-    name: cilium-egress-gtw-ha-ips
-    urls:
-    - packaged_charts/cilium-egress-gtw-ha-ips-1.0.0.tgz
-    version: 1.0.0
   cilium-egress-gtw-ips:
   - apiVersion: v2
-    created: "2024-06-10T12:06:45.226042+02:00"
+    created: "2024-06-10T15:39:57.699637+02:00"
     description: A Chart to setup per namespace egress IP using CiliumEgressGatewayPolicies
     digest: 3ad308ec74a0763fb2a7382a8cdac9d86f80a878fffcb3b0d253ceb5ddbbfe38
     keywords:
@@ -83,7 +69,7 @@ entries:
       catalog.cattle.io/namespace: fleet-default
       catalog.cattle.io/type: cluster-template
     apiVersion: v1
-    created: "2024-06-10T12:06:45.22857+02:00"
+    created: "2024-06-10T15:39:57.70186+02:00"
     description: Cluster template for rke2
     digest: 1a67b459d395e28d21f477b37e62c54947909d63b596bb2d1ccd18a5309be4f2
     name: cluster-template
@@ -94,7 +80,7 @@ entries:
       catalog.cattle.io/namespace: fleet-default
       catalog.cattle.io/type: cluster-template
     apiVersion: v1
-    created: "2024-06-10T12:06:45.227638+02:00"
+    created: "2024-06-10T15:39:57.701097+02:00"
     description: Cluster template for rke2
     digest: 3ba9d2783bf39bec55ee38ae5865c4cbee2869c6135bc400d58b8e203674be2e
     name: cluster-template
@@ -105,7 +91,7 @@ entries:
       catalog.cattle.io/namespace: fleet-default
       catalog.cattle.io/type: cluster-template
     apiVersion: v1
-    created: "2024-06-10T12:06:45.226671+02:00"
+    created: "2024-06-10T15:39:57.700199+02:00"
     description: Cluster template for rke2
     digest: 6fd05ea3970fa65eda39e26374840d269194fab5954e38a62b9f832f98ff2865
     name: cluster-template
@@ -116,7 +102,7 @@ entries:
       catalog.cattle.io/namespace: fleet-default
       catalog.cattle.io/type: cluster-template
     apiVersion: v1
-    created: "2024-06-10T12:06:45.230962+02:00"
+    created: "2024-06-10T15:39:57.70508+02:00"
     description: Cluster template for rke2
     digest: 203915b3e9fee2541fa1012124402623fc51343947ede801a56dfaa257e7fcb5
     name: cluster-template
@@ -127,7 +113,7 @@ entries:
       catalog.cattle.io/namespace: fleet-default
       catalog.cattle.io/type: cluster-template
     apiVersion: v1
-    created: "2024-06-10T12:06:45.230349+02:00"
+    created: "2024-06-10T15:39:57.704476+02:00"
     description: Cluster template for rke2
     digest: 74ad9a6b7dc19ff16901fd663d31b035171fa7fe9bc03e069800262dde46f383
     name: cluster-template
@@ -138,7 +124,7 @@ entries:
       catalog.cattle.io/namespace: fleet-default
       catalog.cattle.io/type: cluster-template
     apiVersion: v1
-    created: "2024-06-10T12:06:45.229733+02:00"
+    created: "2024-06-10T15:39:57.70387+02:00"
     description: Cluster template for rke2
     digest: 3a2f2f398f5a77861c4040ca7851bdc6f3dd762defe27c3eb70abb979f09a52b
     name: cluster-template
@@ -149,7 +135,7 @@ entries:
       catalog.cattle.io/namespace: fleet-default
       catalog.cattle.io/type: cluster-template
     apiVersion: v1
-    created: "2024-06-10T12:06:45.229123+02:00"
+    created: "2024-06-10T15:39:57.702466+02:00"
     description: Cluster template for rke2
     digest: bc217f8254e570b59f0253719d5ddab3a8ec0959d9c9b1bd856cedee13ff6c33
     name: cluster-template
@@ -158,7 +144,7 @@ entries:
     version: 1.0.6
   fleet-templating:
   - apiVersion: v1
-    created: "2024-06-05T11:27:48.815673289+02:00"
+    created: "2024-06-10T15:39:57.705312+02:00"
     description: Helm chart renders input resources as is. Should be used with fleet
       templating to enable templating in otherwise static manifests
     digest: fb40875ca13cbb02293b3bc33ad1d5837cd3e35da0df92e8bb43dac8415a60c8
@@ -168,7 +154,7 @@ entries:
     version: 1.0.0
   logging-policies:
   - apiVersion: v2
-    created: "2024-06-10T12:06:45.232279+02:00"
+    created: "2024-06-10T15:39:57.706332+02:00"
     description: A Chart to setup ClusterOutput and ClusterFlow objects
     digest: 7eabbff832f6a76b9bd9341d04ac7ef0dd6e5628c5282b6510ec564f16d11f78
     keywords:
@@ -181,7 +167,7 @@ entries:
     - packaged_charts/logging-policies-1.0.12.tgz
     version: 1.0.12
   - apiVersion: v2
-    created: "2024-06-10T12:06:45.232447+02:00"
+    created: "2024-06-10T15:39:57.706527+02:00"
     description: A Chart to setup ClusterOutput and ClusterFlow objects
     digest: e2010c2d6181e927e56c5e77ef9a27f684a90e8b224e33f4734f3fb6cf47685d
     keywords:
@@ -194,7 +180,7 @@ entries:
     - packaged_charts/logging-policies-1.0.2.tgz
     version: 1.0.2
   - apiVersion: v2
-    created: "2024-06-10T12:06:45.232019+02:00"
+    created: "2024-06-10T15:39:57.706039+02:00"
     description: A Chart to setup ClusterOutput and ClusterFlow objects
     digest: e53327e8a7aa058f29c1f4ef4882dc36f1bcfb217dff98e987ee80c360a99119
     keywords:
@@ -207,7 +193,7 @@ entries:
     - packaged_charts/logging-policies-1.0.1.tgz
     version: 1.0.1
   - apiVersion: v2
-    created: "2024-06-10T12:06:45.231757+02:00"
+    created: "2024-06-10T15:39:57.705749+02:00"
     description: A Chart to setup ClusterOutput and ClusterFlow objects
     digest: 0126414c29e0dad17f085aea69f7733705edcbab43d0f04a77bf746250ced361
     keywords:
@@ -222,7 +208,7 @@ entries:
   mongodb-express:
   - apiVersion: v2
     appVersion: 1.0.0-20
-    created: "2024-06-10T12:06:45.232967+02:00"
+    created: "2024-06-10T15:39:57.707161+02:00"
     description: A Chart to install MongoDB Express, uses credentials stored in a
       secret created by MongoDB community operator
     digest: 358ad93f9d748eb8283f738374d18a010843a1575f7b811af1559785755586bf
@@ -236,7 +222,7 @@ entries:
     version: 1.1.1
   - apiVersion: v2
     appVersion: 1.0.0-20
-    created: "2024-06-10T12:06:45.232735+02:00"
+    created: "2024-06-10T15:39:57.706903+02:00"
     description: A Chart to install MongoDB Express, uses credentials stored in a
       secret created by MongoDB community operator
     digest: 4658ba387cd9fc8f6c9c0111623db5dd1a39e1e8ee4597aa435ca74aad030515
@@ -250,7 +236,7 @@ entries:
     version: 1.1.0
   - apiVersion: v2
     appVersion: 1.0.0-20
-    created: "2024-06-10T12:06:45.23259+02:00"
+    created: "2024-06-10T15:39:57.706712+02:00"
     description: A Chart to install MongoDB Express, uses credentials stored in a
       secret created by MongoDB community operator
     digest: 87e188f31ab4852cdc4ed2b443c2ab0ce1b352d01337b011e43d9ef6344f47f7
@@ -264,7 +250,7 @@ entries:
     version: 1.0.0
   rancher-audit-log-forwarder:
   - apiVersion: v2
-    created: "2024-06-10T12:06:45.23332+02:00"
+    created: "2024-06-10T15:39:57.70731+02:00"
     description: A Chart to enable sending of Rancher API audit log to syslog server
       (SIEM) using RFC5424 format
     digest: a289e1539e9638f94ec78224ead97503df47e647553167a68c49d4ecd92bedcb
@@ -278,7 +264,7 @@ entries:
     version: 1.0.0
   vsphere-csi-secret:
   - apiVersion: v2
-    created: "2024-06-10T12:06:45.233429+02:00"
+    created: "2024-06-10T15:39:57.707586+02:00"
     description: A Chart to setup Vsphere CSI secret
     digest: 696b3fbf25cc363e2dae5b27cf741c6dde34c5be022db3316f1b2cf154a6b020
     keywords:
@@ -289,4 +275,4 @@ entries:
     urls:
     - packaged_charts/vsphere-csi-secret-1.0.2.tgz
     version: 1.0.2
-generated: "2024-06-10T12:06:45.223325+02:00"
+generated: "2024-06-10T15:39:57.697793+02:00"
