@@ -86,6 +86,9 @@ rkeConfig:
     # IPv4/IPv6 network CIDRs to use for service IPs (default: 10.43.0.0/16)
     # serviceCidr: "10.0.0.0/28"
 
+    # supply additional ETCD arguments
+    etcdArg: []
+
     # Expose etcd metrics to client interface. (Default false)
     etcdExposeMetrics: false    
     # Port range to reserve for services with NodePort visibility (default: "30000-32767")
