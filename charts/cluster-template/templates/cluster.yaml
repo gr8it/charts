@@ -186,6 +186,9 @@ spec:
       cni: {{ .Values.rkeConfig.machineGlobalConfig.cni }}
       disable: {{ .Values.rkeConfig.machineGlobalConfig.disable }}
       disable-kube-proxy: {{ .Values.rkeConfig.machineGlobalConfig.disableKubeProxy }}
+      {{- if .Values.rkeConfig.machineGlobalConfig.etcdArg }}
+      etcd-arg: {{ .Values.rkeConfig.machineGlobalConfig.etcdArg }}
+      {{- end }}
       {{- if .Values.rkeConfig.machineGlobalConfig.etcdExposeMetrics }}
       etcd-expose-metrics: {{ .Values.rkeConfig.machineGlobalConfig.etcdExposeMetrics }} 
       {{- end }}
