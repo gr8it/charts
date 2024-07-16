@@ -1,0 +1,17 @@
+{{- if .Values.kubeApi.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: kube-apiserver
+  namespace: kube-system
+spec:
+  selector:
+    component: kube-apiserver
+  ports:
+  - name: https
+    nodePort: 30000
+    port: 6443
+    protocol: TCP
+  sessionAffinity: None
+  type: NodePort
+{{- end }}

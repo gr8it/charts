@@ -1,0 +1,3 @@
+{{- define "clusterName" -}}
+{{ .Values.clusterName | default "default" }}
+{{- end -}}
