@@ -2,7 +2,7 @@
 clusterName: ""
 
 # KUBE API of RKE2
-kubeApi:
+kubeAPI:
   enabled: false
   # TLS host to use for KUBE API
   tlsHost: ""
