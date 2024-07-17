@@ -1,0 +1,15 @@
+{{- /* although IP address is not used in this resource, the resouce is used by virtualserver, where IP address is a required parameter */}}
+{{- if and .Values.kubeAPI.enabled .Values.kubeAPI.tlsHost .Values.kubeAPI.IPaddress }}
+apiVersion: cis.f5.com/v1
+kind: TLSProfile
+metadata:
+  name: kube-apiserver-passthrough-tls-{{ template "clusterName" . }}
+  namespace: kube-system
+  labels:
+    f5cr: "true"
+spec:
+  tls:
+    termination: passthrough
+  hosts: 
+  - {{ .Values.kubeAPI.tlsHost }}
+{{- end }}

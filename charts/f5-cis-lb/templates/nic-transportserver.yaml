@@ -1,0 +1,63 @@
+{{- if and .Values.ingressController.enabled .Values.ingressController.IPaddress }}
+apiVersion: "cis.f5.com/v1"
+kind: TransportServer
+metadata:
+  labels:
+    f5cr: "true"
+  name: rke2-ingress-nginx-controller-http
+  namespace: kube-system
+spec:
+  virtualServerAddress: "{{ required "ingressController.IPaddress is a required parameter" .Values.ingressController.IPaddress }}"
+  virtualServerPort: 80
+  virtualServerName: "rke2-ingress-nginx-controller-http-{{ template "clusterName" . }}"
+  type: tcp
+  mode: performance # standard
+  # snat: none # auto
+  pool:
+    service: rke2-ingress-nginx-controller
+    servicePort: 80
+    nodeMemberLabel: node-role.kubernetes.io/worker=true
+    monitor:
+      interval: 5
+      timeout: 3
+      type: tcp
+    serviceDownAction: reselect
+    reselectTries: 0
+  serviceAddress:
+  - icmpEcho: "enable"
+    # vyzera, ze false ARP nevypne :-/
+    arpEnabled: true
+    # for multiple BigIPs spanning should be enabled
+    # spanningEnabled: true
+---
+apiVersion: "cis.f5.com/v1"
+kind: TransportServer
+metadata:
+  labels:
+    f5cr: "true"
+  name: rke2-ingress-nginx-controller-https
+  namespace: kube-system
+spec:
+  virtualServerAddress: "{{ required "ingressController.IPaddress is a required parameter" .Values.ingressController.IPaddress }}"
+  virtualServerPort: 443
+  virtualServerName: "rke2-ingress-nginx-controller-https-{{ template "clusterName" . }}"
+  type: tcp
+  mode: performance # standard
+  # snat: none # auto
+  pool:
+    service: rke2-ingress-nginx-controller
+    servicePort: 443
+    nodeMemberLabel: node-role.kubernetes.io/worker=true
+    monitor:
+      interval: 5
+      timeout: 3
+      type: tcp
+    serviceDownAction: reselect
+    reselectTries: 0
+  serviceAddress:
+  - icmpEcho: "enable"
+    # vyzera, ze false ARP nevypne :-/
+    arpEnabled: true
+    # for multiple BigIPs spanning should be enabled
+    # spanningEnabled: true
+{{- end }}

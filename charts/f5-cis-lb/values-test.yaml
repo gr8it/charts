@@ -1,0 +1,9 @@
+clusterName: sandbox-pst01
+
+kubeAPI:
+  enabled: true
+  tlsHost: api.app.rancher.dev.sp.lab.gr8it.cloud
+  IPaddress: 10.0.45.137
+ingressController:
+  enabled: false
+  IPaddress: 10.0.45.136

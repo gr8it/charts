@@ -1,0 +1,37 @@
+{{- if and .Values.kubeAPI.enabled .Values.kubeAPI.tlsHost .Values.kubeAPI.IPaddress }}
+apiVersion: "cis.f5.com/v1"
+kind: VirtualServer
+metadata:
+  name: kube-apiserver
+  namespace: kube-system
+  labels:
+    f5cr: "true"
+spec:
+  # must match the tlsprofile host
+  host: "{{ required "kubeAPI.tlsHost is a required parameter" .Values.kubeAPI.tlsHost }}"
+  virtualServerAddress: "{{ required "kubeAPI.IPaddress is a required parameter" .Values.kubeAPI.IPaddress }}"
+  virtualServerHTTPSPort: 6443
+  virtualServerName: "kube-apiserver-vs-{{ template "clusterName" . }}"
+  httpTraffic: none
+  pools:
+  - path: /
+    service: kube-apiserver
+    servicePort: 6443
+    nodeMemberLabel: node-role.kubernetes.io/control-plane=true
+    monitors:
+    - interval: 5
+      timeout: 3
+      type: tcp
+      # type: https
+      # send: "GET /healthz"
+      # recv: ""
+    serviceDownAction: reselect
+    reselectTries: 0
+  serviceAddress:
+  - icmpEcho: "enable"
+    # vyzera, ze false ARP nevypne :-/
+    arpEnabled: true
+    # for multiple BigIPs spanning should be enabled
+    # spanningEnabled: true
+  tlsProfileName: "kube-apiserver-passthrough-tls-{{ template "clusterName" . }}"
+{{- end }}

@@ -1,0 +1,18 @@
+# name of the cluster - is used as part of the resource names on BigIP F5, e.g. tlsProfileName: kube-apiserver-passthrough-tls-{{ clusterName }}
+clusterName: ""
+
+# KUBE API of RKE2
+kubeAPI:
+  enabled: false
+  # TLS host to use for KUBE API
+  tlsHost: ""
+  # IP address of the F5 CIS Kube API endpoint to create
+  # Note: kubeAPI.IPaddress and ingressController.IPaddress must not be the same!
+  IPaddress: ""
+
+# NGINX ingress controller for RKE2
+ingressController:
+  enabled: false
+  # IP address of the NGINX Ingress Controller F5 CIS endpoint to create
+  # Note: kubeAPI.IPaddress and ingressController.IPaddress must not be the same!
+  IPaddress: ""
