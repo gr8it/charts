@@ -1,0 +1,8 @@
+clusterName: hub01
+defaultNamespace: apc-backup
+image:
+  amazonAwsCli: amazon/aws-cli:2.22.18
+  openshiftCli: registry.redhat.io/openshift4/ose-cli:v4.13
+cronJobs:
+  etcdBackupSchedule: "0 22 * * *"
+  s3CleanupSchedule: "0 23 * * 0"
