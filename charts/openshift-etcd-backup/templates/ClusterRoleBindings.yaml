@@ -1,0 +1,15 @@
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  namespace: {{ .Values.defaultNamespace }}
+  name: cronjob-etcd-backup-{{ .Values.clusterName }}
+  labels:
+    app.kubernetes.io/name: cronjob-etcd-backup-{{ .Values.clusterName }}
+subjects:
+  - kind: ServiceAccount
+    name: cronjob-etcd-backup-{{ .Values.clusterName }}
+    namespace: {{ .Values.defaultNamespace }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cronjob-etcd-backup-{{ .Values.clusterName }}

@@ -1,0 +1,146 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: cronjob-etcd-backup-{{ .Values.clusterName }}
+  namespace: {{ .Values.defaultNamespace }}
+  labels:
+    app.kubernetes.io/name: cronjob-etcd-backup-{{ .Values.clusterName }}
+spec:
+  schedule: {{ .Values.cronJobs.etcdBackupSchedule }}
+  concurrencyPolicy: Forbid
+  suspend: false
+  jobTemplate:
+    metadata:
+      labels:
+        app.kubernetes.io/name: cronjob-etcd-backup-{{ .Values.clusterName }}
+    spec:
+      backoffLimit: 0
+      template:
+        metadata:
+          labels:
+            app.kubernetes.io/name: cronjob-etcd-backup-{{ .Values.clusterName }}
+        spec:
+          nodeSelector:
+            node-role.kubernetes.io/master: ''
+          restartPolicy: Never
+          activeDeadlineSeconds: 500
+          serviceAccountName: cronjob-etcd-backup-{{ .Values.clusterName }}
+          hostPID: true
+          hostNetwork: true
+          dnsPolicy: ClusterFirstWithHostNet
+          enableServiceLinks: true
+          schedulerName: default-scheduler
+          terminationGracePeriodSeconds: 30
+          securityContext: {}
+
+          # Init container for Backup & Cleanup
+          initContainers:
+            - name: cronjob-etcd-backup
+              image: {{ .Values.image.openshiftCli }}
+              terminationMessagePath: /dev/termination-log
+              command:
+                - /bin/bash
+                - '-c'
+                - >-
+                    set -euo pipefail;
+                    echo -e '\n\n---\nCreate etcd backup local to master\n' &&
+                    chroot /host /usr/local/bin/cluster-backup.sh /home/core/backup/$(date "+%F_%H%M%S") &&
+                    echo -e '\n\n---\nCleanup old local etcd backups\n' &&
+                    chroot /host find /home/core/backup/ -mindepth 1 -type d -mmin +10 -exec rm -rf {} \; || echo "Some directories in error above were already deleted or do not exist, continuing with etcd upload."
+              securityContext:   
+                privileged: true
+                runAsUser: 0
+                capabilities:
+                  add:
+                    - SYS_CHROOT
+              imagePullPolicy: Always
+              volumeMounts:
+                - name: host
+                  mountPath: /host
+              terminationMessagePolicy: File
+              resources:
+                requests:
+                  cpu: "500m"
+                  memory: "1Gi"
+                limits:
+                  cpu: "500m"
+                  memory: "1Gi"
+
+          # Main container for AWS S3 upload
+          containers:
+            - name: aws-cli
+              image: {{ .Values.image.amazonAwsCli }}
+              command:
+              - /bin/bash
+              - '-c'
+              - >-
+                set -euo pipefail;
+                SSL_OPTION=$(if [ "$VERIFY_S3_SSL" = "false" ]; then echo "--no-verify-ssl"; else echo ""; fi) &&
+                if [[ $(find /host/home/core/backup/ -type d -cmin -1 | wc -c) -ne 0 ]]; then
+                  aws s3 cp /host/home/core/backup/ "s3://$(echo $BUCKET_PATH/)" --recursive --endpoint "https://$(echo $BUCKET_ENDPOINT)" $SSL_OPTION;
+                else
+                  echo "No new valid backup directory found to upload. Exiting gracefully." >&2
+                  exit 1
+                fi;
+              env:
+              - name: BUCKET_PATH
+                valueFrom:
+                  secretKeyRef:
+                    name: etcd-{{ .Values.clusterName }}-backup-cloud-credentials
+                    key: bucket_path
+              - name: BUCKET_ENDPOINT
+                valueFrom:
+                  secretKeyRef:
+                    name: etcd-{{ .Values.clusterName }}-backup-cloud-credentials
+                    key: bucket_endpoint
+              - name: AWS_ACCESS_KEY_ID
+                valueFrom:
+                  secretKeyRef:
+                    name: etcd-{{ .Values.clusterName }}-backup-cloud-credentials
+                    key: aws_access_key_id
+              - name: AWS_SECRET_ACCESS_KEY
+                valueFrom:
+                  secretKeyRef:
+                    name: etcd-{{ .Values.clusterName }}-backup-cloud-credentials
+                    key: aws_secret_access_key
+              - name: AWS_DEFAULT_REGION
+                valueFrom:
+                  secretKeyRef:
+                    name: etcd-{{ .Values.clusterName }}-backup-cloud-credentials
+                    key: region
+              - name: VERIFY_S3_SSL
+                valueFrom:
+                  secretKeyRef:
+                    name: etcd-{{ .Values.clusterName }}-backup-cloud-credentials
+                    key: verify_s3_ssl
+              volumeMounts:
+                - name: host
+                  mountPath: /host
+              resources:
+                requests:
+                  cpu: "200m"
+                  memory: "500Mi"
+                limits:
+                  cpu: "500m"
+                  memory: "1Gi"
+
+          volumes:
+            - name: host
+              hostPath:
+                path: /
+                type: Directory
+
+          tolerations:
+            - key: node-role.kubernetes.io/master
+              operator: "Exists"
+              effect: "NoSchedule"
+          affinity:
+            nodeAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                nodeSelectorTerms:
+                  - matchExpressions:
+                    - key: "node-role.kubernetes.io/master"
+                      operator: "Exists"
+
+  successfulJobsHistoryLimit: 7
+  failedJobsHistoryLimit: 7

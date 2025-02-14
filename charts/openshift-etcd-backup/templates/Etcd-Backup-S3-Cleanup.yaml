@@ -1,0 +1,103 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: cronjob-etcd-backup-s3-cleanup-{{ .Values.clusterName }}
+  namespace: {{ .Values.defaultNamespace }}
+  labels:
+    app.kubernetes.io/name: cronjob-etcd-backup-s3-cleanup-{{ .Values.clusterName }}
+spec:
+  schedule: {{ .Values.cronJobs.s3CleanupSchedule }}
+  concurrencyPolicy: Forbid
+  suspend: false
+  jobTemplate:
+    metadata:
+      labels:
+        app.kubernetes.io/name: cronjob-etcd-backup-s3-cleanup-{{ .Values.clusterName }}
+    spec:
+      backoffLimit: 0
+      template:
+        metadata:
+          labels:
+            app.kubernetes.io/name: cronjob-etcd-backup-s3-cleanup-{{ .Values.clusterName }}
+        spec:
+          restartPolicy: Never
+          serviceAccountName: cronjob-etcd-backup-{{ .Values.clusterName }}
+          containers:
+            - name: s3-backup-cleanup
+              image: {{ .Values.image.amazonAwsCli }}
+              command:
+              - /bin/bash
+              - '-c'
+              - >-
+                  set -euo pipefail;
+                  echo "Using bucket path: $(echo $BUCKET_PATH)/" &&
+                  echo "Using bucket endpoint: $(echo $BUCKET_ENDPOINT)" &&
+                  echo "Using retention value: $(echo $BUCKET_N_ETCD_RETENTION)" &&
+                  SSL_OPTION=$(if [[ "$(echo $VERIFY_S3_SSL)" == "false" ]]; then echo "--no-verify-ssl"; else echo ""; fi) &&
+                  BACKUPS_LIST=$(aws s3 ls "s3://$(echo $BUCKET_PATH)/" --endpoint-url "$(echo $BUCKET_ENDPOINT)" $SSL_OPTION | awk '/\/$/ {print $NF}') &&
+
+
+                  if [[ -n "${BACKUPS_LIST// /}" ]]; then
+                    echo "Backups found: $BACKUPS_LIST"
+                  else
+                    echo "No backups found in S3."
+                    exit 0
+                  fi &&
+                  BACKUPS_TO_DELETE=$(echo "$BACKUPS_LIST" | sort -r | tail -n +$(($(echo $BUCKET_N_ETCD_RETENTION) + 1))) &&
+                  echo "Backups to delete:" &&
+                  echo "$BACKUPS_TO_DELETE" &&
+
+                  for BACKUP in "$BACKUPS_TO_DELETE"; do
+                    echo "Deleting backup: $BACKUP" &&
+                    aws s3 rm "s3://$(echo $BUCKET_PATH)/$BACKUP" --endpoint-url "$(echo $BUCKET_ENDPOINT)" --recursive $SSL_OPTION &&
+                    echo "Deleted $BACKUP" ||
+                    echo "Failed to delete $BACKUP"
+                  done
+                    
+
+              env:
+                - name: BUCKET_PATH
+                  valueFrom:
+                    secretKeyRef:
+                      name: etcd-{{ .Values.clusterName }}-backup-cloud-credentials
+                      key: bucket_path
+                - name: BUCKET_ENDPOINT
+                  valueFrom:
+                    secretKeyRef:
+                      name: etcd-{{ .Values.clusterName }}-backup-cloud-credentials
+                      key: bucket_endpoint
+                - name: AWS_ACCESS_KEY_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: etcd-{{ .Values.clusterName }}-backup-cloud-credentials
+                      key: aws_access_key_id
+                - name: AWS_SECRET_ACCESS_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: etcd-{{ .Values.clusterName }}-backup-cloud-credentials
+                      key: aws_secret_access_key
+                - name: BUCKET_N_ETCD_RETENTION
+                  valueFrom:
+                    secretKeyRef:
+                      name: etcd-{{ .Values.clusterName }}-backup-cloud-credentials
+                      key: bucket_n_etcd_retention
+                - name: AWS_DEFAULT_REGION
+                  valueFrom:
+                    secretKeyRef:
+                      name: etcd-{{ .Values.clusterName }}-backup-cloud-credentials
+                      key: region
+                - name: VERIFY_S3_SSL
+                  valueFrom:
+                    secretKeyRef:
+                      name: etcd-{{ .Values.clusterName }}-backup-cloud-credentials
+                      key: verify_s3_ssl
+                  
+              resources:
+                requests:
+                  cpu: "200m"
+                  memory: "500Mi"
+                limits:
+                  cpu: "500m"
+                  memory: "1Gi"
+  successfulJobsHistoryLimit: 7
+  failedJobsHistoryLimit: 7
