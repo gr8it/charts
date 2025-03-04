@@ -11,7 +11,7 @@ This Helm chart deploys the BIND DNS statistics exporter for Prometheus. The exp
 - Kubernetes 1.16+
 - Helm 3.x
 - BIND DNS server with statistics-channel enabled
-- Prometheus Operator (optional, for using ServiceMonitor)
+- Prometheus Operator (optional, for using PodMonitor)
 
 ## Features
 
