@@ -1,0 +1,5 @@
+BIND Exporter has been installed.
+
+{{- if .Values.podMonitor.enabled }}
+podMonitor has been created and will be discovered by Prometheus.
+{{- end }}

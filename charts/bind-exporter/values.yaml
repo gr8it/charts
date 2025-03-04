@@ -1,0 +1,67 @@
+# Default values for bind-exporter
+nameOverride: ""      # name of the chart 
+fullnameOverride: ""  # name of the application instance
+namespace:  
+
+image:
+  repository: prometheuscommunity/bind-exporter
+  tag: v0.8.0
+  pullPolicy: IfNotPresent
+
+bindStats:
+  url: ""             #<http://bind-server:statistics_port>
+resources:
+  limits:
+    cpu: 250m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 64Mi
+
+deployment:
+  replicas: 1
+  revisionHistoryLimit: 10
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+  probes:
+    liveness:
+      enabled: true
+      initialDelaySeconds: 30
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 3
+    readiness:
+      enabled: true
+      initialDelaySeconds: 5
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 3
+
+
+podMonitor:
+  enabled: true
+  interval: 30s
+
+networkPolicy:
+  enabled: true
+  # Ingress rules for metrics endpoint
+  metrics:
+    namespaceSelector:
+      matchLabels:
+        kubernetes.io/metadata.name: openshift-user-workload-monitoring 
+    podSelector:
+      matchLabels:
+        app.kubernetes.io/name: prometheus
+  # Additional ingress rules if needed
+  additionalRules: []
+  # Example of additional rules:
+  # - from:
+  #   - namespaceSelector:
+  #       matchLabels:
+  #         name: other-namespace
+  #     podSelector:
+  #       matchLabels:
+  #         app: other-app
