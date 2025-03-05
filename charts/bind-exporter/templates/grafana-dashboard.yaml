@@ -1,4 +1,4 @@
-{{- if and .Values.grafanaDashboard.enabled .Values.grafanaDashboard.isPrimary }}
+{{- if and .Values.grafanaDashboard.enabled }}
 apiVersion: grafana.integreatly.org/v1beta1
 kind: GrafanaDashboard
 metadata:

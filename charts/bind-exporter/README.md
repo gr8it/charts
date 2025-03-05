@@ -12,12 +12,14 @@ This Helm chart deploys the BIND DNS statistics exporter for Prometheus. The exp
 - Helm 3.x
 - BIND DNS server with statistics-channel enabled
 - Prometheus Operator (optional, for using PodMonitor)
+- Grafana Operator with Prometheus data source configured (optional, for using GrafanaDashboard)
 
 ## Features
 
 - Prometheus metrics export for BIND DNS server statistics
 - Configurable statistics endpoint
-- Prometheus PodMonitor support
+- Prometheus PodMonitor
+- Grafana Dashboard for bind-exporter metrics
 - Resource management with configurable limits and requests
 - Security-hardened defaults:
   - Network policies to restrict traffic
@@ -63,6 +65,21 @@ podMonitor:
   enabled: true
   interval: 30s
 ```
+
+### Grafana Dashboard
+
+The dashboard is deployed automatically with the following configurations:
+
+```yaml
+grafanaDashboard:
+  enabled: true
+  namespace: "apc-observability"
+  folder: "apc-observability"
+  instanceSelector:
+    dashboards: "apc-grafana"
+```
+
+Only one dashboard should be deployed. When deploying multiple instances of bind-exporter, for any additional instances set the **grafanaDashboard.enabled=false**
 
 ## Troubleshooting
 
