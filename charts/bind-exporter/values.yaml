@@ -40,11 +40,23 @@ deployment:
       timeoutSeconds: 5
       failureThreshold: 3
 
-
 podMonitor:
   enabled: true
   interval: 30s
 
+grafanaDashboard:
+  enabled: true
+  isPrimary: true                     # Grafana dashboard will be deployed only once with the first (primary) instance of binn-exporter. For any additional instances set this to false.
+  namespace: "apc-observability"
+  folder: "apc-observability"
+  datasourceName: "prometheus"
+  instanceSelector:
+    dashboards: "apc-grafana"
+  labels:
+    app: grafana
+    dashboard: bind-exporter
+  
+  
 networkPolicy:
   enabled: true
   # Ingress rules for metrics endpoint
