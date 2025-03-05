@@ -45,8 +45,7 @@ podMonitor:
   interval: 30s
 
 grafanaDashboard:
-  enabled: true
-  isPrimary: true                     # Grafana dashboard will be deployed only once with the first (primary) instance of binn-exporter. For any additional instances set this to false.
+  enabled: true                        # Grafana dashboard will be deployed only once with the first instance of bind-exporter. For any additional instances set this to false.
   namespace: "apc-observability"
   folder: "apc-observability"
   datasourceName: "prometheus"
