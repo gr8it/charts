@@ -1,7 +1,8 @@
 # Default values for bind-exporter
-nameOverride: ""      # optional customization for the chart name portion in the generated resource names. Example: If your chart is named "bind-exporter" and you set nameOverride: "custom", resources would be named like: release-name-custom
-fullnameOverride: ""  # similar to nameOverride but for the full name of the resources. Example: If you set fullnameOverride: "custom", resources would be simply named: custom
-namespace:            # namespace where bind-exporter will be deployed
+nameOverride: ""                         # optional customization for the chart name portion in the generated resource names. Example: If your chart is named "bind-exporter" and you set nameOverride: "custom", resources would be named like: release-name-custom
+fullnameOverride: ""                     # similar to nameOverride but for the full name of the resources. Example: If you set fullnameOverride: "custom", resources would be simply named: custom
+namespace: apc-monitoring-bind           # namespace where bind-exporter will be deployed       
+replicaCount: 1
 
 image:
   repository: prometheuscommunity/bind-exporter
@@ -9,7 +10,7 @@ image:
   pullPolicy: IfNotPresent
 
 bindStats:
-  url: ""             #<http://bind-server:statistics_port>
+  url: "http://10.111.126.2:8053"             #<http://bind-server:statistics_port>
 resources:
   limits:
     cpu: 250m
@@ -46,13 +47,13 @@ podMonitor:
 
 grafanaDashboard:
   enabled: true                     # Grafana dashboard will be deployed only once with the first instance of bind-exporter. For any additional instances set this to false.
-  namespace: ""                     # Namespace where the Grafana dashboard will be deployed
-  folder: ""                        # Folder name in Grafana where the dashboard will be placed
-  datasourceName: ""                # Name of the Prometheus datasource in Grafana
+  namespace: "apc-observability"    # Namespace where the Grafana dashboard will be deployed
+  folder: "apc-observability"       # Folder name in Grafana where the dashboard will be placed
+  datasourceName: "prometheus"      # Name of the Prometheus datasource in Grafana
   instanceSelector:
-    dashboards: ""                  # Set the labels for matching with Grafana instance
-  labels:
-    app: grafana                    # Labels for the Grafana dashboard
+    dashboards: "apc-grafana"       # Set the labels for matching with Grafana instance
+  labels:                           # Labels for the Grafana dashboard
+    app: grafana
     dashboard: bind-exporter
   
   
