@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "bind-exporter.fullname" . }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "bind-exporter.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.deployment.replicas }}
+  selector:
+    matchLabels:
+      {{- include "bind-exporter.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "bind-exporter.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args:
+            - --bind.stats-url={{ .Values.bindStats.url }}
+          ports:
+            - name: metrics
+              containerPort: 9119
+              protocol: TCP
+          {{- if .Values.deployment.probes.liveness.enabled }}
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: metrics
+            initialDelaySeconds: {{ .Values.deployment.probes.liveness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.deployment.probes.liveness.periodSeconds }}
+            timeoutSeconds: {{ .Values.deployment.probes.liveness.timeoutSeconds }}
+            failureThreshold: {{ .Values.deployment.probes.liveness.failureThreshold }}
+          {{- end }}
+          {{- if .Values.deployment.probes.readiness.enabled }}
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: metrics
+            initialDelaySeconds: {{ .Values.deployment.probes.readiness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.deployment.probes.readiness.periodSeconds }}
+            timeoutSeconds: {{ .Values.deployment.probes.readiness.timeoutSeconds }}
+            failureThreshold: {{ .Values.deployment.probes.readiness.failureThreshold }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+  strategy:
+    {{- toYaml .Values.deployment.strategy | nindent 4 }}
+  revisionHistoryLimit: {{ .Values.deployment.revisionHistoryLimit }}

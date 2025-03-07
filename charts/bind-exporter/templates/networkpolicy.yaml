@@ -1,0 +1,38 @@
+{{- if .Values.networkPolicy.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "bind-exporter.fullname" . }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "bind-exporter.labels" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "bind-exporter.selectorLabels" . | nindent 6 }}
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    # Allow prometheus to scrape metrics
+    - ports:
+        - port: 9119
+          protocol: TCP
+      from:
+        - namespaceSelector:
+            {{- toYaml .Values.networkPolicy.metrics.namespaceSelector | nindent 12 }}
+          podSelector:
+            {{- toYaml .Values.networkPolicy.metrics.podSelector | nindent 12 }}
+    {{- with .Values.networkPolicy.additionalRules }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  egress:
+    # Allow access to bind stats endpoint
+    - ports:
+        - port: 8053
+          protocol: TCP
+      to:
+        - ipBlock:
+            # Extract the IP from bindStats.url
+            cidr: {{ regexReplaceAll "^http://(.*):.*$" .Values.bindStats.url "${1}"}}/32
+{{- end }}

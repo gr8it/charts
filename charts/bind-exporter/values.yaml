@@ -1,0 +1,78 @@
+# Default values for bind-exporter
+nameOverride: ""      # optional customization for the chart name portion in the generated resource names. Example: If your chart is named "bind-exporter" and you set nameOverride: "custom", resources would be named like: release-name-custom
+fullnameOverride: ""  # similar to nameOverride but for the full name of the resources. Example: If you set fullnameOverride: "custom", resources would be simply named: custom
+namespace:            # namespace where bind-exporter will be deployed
+
+image:
+  repository: prometheuscommunity/bind-exporter
+  tag: v0.8.0
+  pullPolicy: IfNotPresent
+
+bindStats:
+  url: ""             #<http://bind-server:statistics_port>
+resources:
+  limits:
+    cpu: 250m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 64Mi
+
+deployment:
+  replicas: 1
+  revisionHistoryLimit: 10
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+  probes:
+    liveness:
+      enabled: true
+      initialDelaySeconds: 30
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 3
+    readiness:
+      enabled: true
+      initialDelaySeconds: 5
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 3
+
+podMonitor:
+  enabled: false
+  interval: 30s
+
+grafanaDashboard:
+  enabled: false                     # Grafana dashboard will be deployed only once with the first instance of bind-exporter. For any additional instances set this to false.
+  namespace: ""                     # Namespace where the Grafana dashboard will be deployed
+  folder: ""                        # Folder name in Grafana where the dashboard will be placed
+  datasourceName: ""                # Name of the Prometheus datasource in Grafana
+  instanceSelector:
+    dashboards: ""                  # Set the labels for matching with Grafana instance
+  labels:
+    app: grafana                    # Labels for the Grafana dashboard
+    dashboard: bind-exporter
+  
+  
+networkPolicy:
+  enabled: true
+  # Ingress rules for metrics endpoint
+  metrics:
+    namespaceSelector:
+      matchLabels:
+        kubernetes.io/metadata.name: openshift-user-workload-monitoring 
+    podSelector:
+      matchLabels:
+        app.kubernetes.io/name: prometheus
+  # Additional ingress rules if needed
+  additionalRules: []
+  # Example of additional rules:
+  # - from:
+  #   - namespaceSelector:
+  #       matchLabels:
+  #         name: other-namespace
+  #     podSelector:
+  #       matchLabels:
+  #         app: other-app

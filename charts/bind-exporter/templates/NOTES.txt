@@ -1,0 +1,9 @@
+BIND Exporter has been installed.
+
+{{- if .Values.podMonitor.enabled }}
+podMonitor has been created and will be discovered by Prometheus Operator.
+{{- end }}
+
+{{- if .Values.grafanaDashboard.enabled }}
+Grafana dashboard has been created and will be discovered by Grafana Operator.
+{{- end }}
