@@ -41,11 +41,11 @@ deployment:
       failureThreshold: 3
 
 podMonitor:
-  enabled: true
+  enabled: false
   interval: 30s
 
 grafanaDashboard:
-  enabled: true                     # Grafana dashboard will be deployed only once with the first instance of bind-exporter. For any additional instances set this to false.
+  enabled: false                     # Grafana dashboard will be deployed only once with the first instance of bind-exporter. For any additional instances set this to false.
   namespace: ""                     # Namespace where the Grafana dashboard will be deployed
   folder: ""                        # Folder name in Grafana where the dashboard will be placed
   datasourceName: ""                # Name of the Prometheus datasource in Grafana
