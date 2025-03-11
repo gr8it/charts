@@ -1,0 +1,31 @@
+{{- if and .Values.grafanaDashboard.enabled }}
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: bind-exporter-dashboard
+  {{- if .Values.grafanaDashboard.namespace }}
+  namespace: {{ .Values.grafanaDashboard.namespace }}
+  {{- end }}
+  labels:
+    {{- with .Values.grafanaDashboard.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.grafanaDashboard.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  instanceSelector:
+    matchLabels:
+      dashboards: {{ .Values.grafanaDashboard.instanceSelector.dashboards | default "grafana" }}
+  {{- if .Values.grafanaDashboard.folder }}
+  folder: {{ .Values.grafanaDashboard.folder }}
+  {{- end }}
+  datasources:
+    {{- range .Values.grafanaDashboard.datasources }}
+    - inputName: "DS_PROMETHEUS"
+      datasourceName: {{ . }}
+    {{- end }}
+  json: |-
+    {{ .Files.Get "dashboard/bind-exporter.json" | nindent 4 }}
+{{- end }}
