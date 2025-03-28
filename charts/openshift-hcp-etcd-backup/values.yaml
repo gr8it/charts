@@ -2,11 +2,11 @@
 clusterName: ~
 # clusterNamespace: <string> - optional, overrides the default hcp namespace {clusterName-clusterName}
 clusterNamespace: ~
-# backupNamespace: <string> - mandatory, namespace for helmchart deployment
+# backupNamespace: <string> - mandatory, namespace for backup job deployment
 backupNamespace: ~
 # backupSchedule: <string> - crontab notation for etcd backup schedule
 backupSchedule: "0 * * * *"
-# retentionDays: <int> - how many days to keep old backups during cleanup phase
+# retentionDays: <int> - specifies the number of days to retain old backups during the cleanup phase
 retentionDays: 30
 # etcdStatefulSetName: <string> - optional, overrides the default etcd statefulset neme in hcp namespace
 etcdStatefulSetName: etcd
@@ -21,12 +21,12 @@ objectBucketClaim:
   # storageClass: <string> - optional, defines a storageClass for the ObjectBucketClaim
   storageClass: "ocs-storagecluster-ceph-rgw"
 
+# Set this to reference private CA for accessing s3 storage endpoint via local svc url
+selfSignedCertificate:
+  configMap: openshift-service-ca.crt
+  name: service-ca.crt
 
-# Set this when using a self-signed certificate for s3 storage endpoint
-# selfSignedCertificate:
-#   configMap: config-map-name-with-ca
-#   name: ca-certifiacte-name
-
+# Container image references
 image:
   awscli: amazon/aws-cli:2.24.27
   ocpcli: registry.redhat.io/openshift4/ose-cli:v4.15
