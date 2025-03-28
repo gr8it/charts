@@ -62,6 +62,11 @@ spec:
                 configMapKeyRef:
                   name: {{ include "app.fullname" . }}-scripts
                   key: env.hcpns
+            - name: FILEPREFIX
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "app.fullname" . }}-scripts
+                  key: env.fileprefix
           containers:
           - name: s3backup
             image: {{ .Values.image.awscli }}
@@ -85,6 +90,11 @@ spec:
                 configMapKeyRef:
                   name: {{ include "app.fullname" . }}-scripts
                   key: env.retention
+            - name: FILEPREFIX
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "app.fullname" . }}-scripts
+                  key: env.fileprefix
             {{- if and (hasKey .Values "selfSignedCertificate") (hasKey .Values.selfSignedCertificate "configMap") (hasKey .Values.selfSignedCertificate "name") }}
             - name: AWS_CA_BUNDLE
               value: "/etc/ssl/certs/s3ca.crt"
