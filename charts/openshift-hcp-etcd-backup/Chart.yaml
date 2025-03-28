@@ -1,0 +1,6 @@
+apiVersion: v2
+name: etcd-hcp-backup
+description: A Helm chart for Openshift Hosted Control Plane etcd backup
+type: application
+appVersion: "1.0.0"
+version: 0.1.0
