@@ -78,10 +78,10 @@ spec:
               mountPath: /usr/local/bin/s3upload.sh
               subPath: s3upload.sh
               readOnly: true
-            {{- if and (hasKey .Values "selfSignedCertificate") (hasKey .Values.selfSignedCertificate "configMap") (hasKey .Values.selfSignedCertificate "name") }}
+            {{- if and (hasKey .Values "selfSignedCertificate") (hasKey .Values.selfSignedCertificate "name") (hasKey .Values.selfSignedCertificate "key") }}
             - name: s3ca
               mountPath: /etc/ssl/certs/s3ca.crt
-              subPath: {{ .Values.selfSignedCertificate.name }}
+              subPath: {{ .Values.selfSignedCertificate.key }}
               readOnly: true
             {{- end }}
             env:
@@ -95,7 +95,7 @@ spec:
                 configMapKeyRef:
                   name: {{ include "app.fullname" . }}-scripts
                   key: env.fileprefix
-            {{- if and (hasKey .Values "selfSignedCertificate") (hasKey .Values.selfSignedCertificate "configMap") (hasKey .Values.selfSignedCertificate "name") }}
+            {{- if and (hasKey .Values "selfSignedCertificate") (hasKey .Values.selfSignedCertificate "name") (hasKey .Values.selfSignedCertificate "key") }}
             - name: AWS_CA_BUNDLE
               value: "/etc/ssl/certs/s3ca.crt"
             {{- end }}
@@ -119,8 +119,8 @@ spec:
             configMap:
               name: {{template "app.fullname" . }}-scripts
               defaultMode: 0555
-          {{- if and (hasKey .Values "selfSignedCertificate") (hasKey .Values.selfSignedCertificate "configMap") }}
+          {{- if and (hasKey .Values "selfSignedCertificate") (hasKey .Values.selfSignedCertificate "name") }}
           - name: s3ca
             configMap:
-              name: {{ .Values.selfSignedCertificate.configMap }}
+              name: {{ .Values.selfSignedCertificate.name }}
           {{- end }}

@@ -23,8 +23,8 @@ objectBucketClaim:
 
 # Set this to reference private CA for accessing s3 storage endpoint via local svc url
 selfSignedCertificate:
-  configMap: openshift-service-ca.crt
-  name: service-ca.crt
+  name: openshift-service-ca.crt
+  key: service-ca.crt
 
 # Container image references
 image:
