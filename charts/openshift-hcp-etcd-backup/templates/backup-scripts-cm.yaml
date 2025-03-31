@@ -56,7 +56,7 @@ data:
     fi
 
     if [ -z ${ETCDPOD+x} ]; then
-      log_message "ERROR: Faield to find a running etcd pod"
+      log_message "ERROR: Failed to find a running etcd pod"
       exit 1
     fi
 
