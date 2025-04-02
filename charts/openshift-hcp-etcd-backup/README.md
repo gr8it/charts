@@ -16,6 +16,7 @@ The Job will create a compressed etcd snapshot, and uploads it to an S3 endpoint
 | backupSchedule                  | str  | `"0 * * * *"`                   | Cron notation for ETCD backup schedule |
 | retentionDays                   | int  | `30`                            | Specifies the number of days to retain old backups during the cleanup phase  |
 | etcdStatefulSetName             | str  | `etcd`                          | An optional parameter that overrides the default etcd StatefulSet name in  the Hosted Cluster namespace |
+| compressSnapshot                | bool | `false`                         | Controls whether to use gzip to compress the snapshot before uploading to S3 |
 | objectBucketClaim.create        | bool | `false`                         | Determines whether to create an ObjectBucketClaim in the `{backupNamespace}` for storing etcd backups. If set to `false`, an existing ObjectBucketClaim must be referenced with `{objectBucketClaim.name}` |
 | objectBucketClaim.name          | str  | `etcd-hcp-{clusterName}-backup` | This parameter is mandatory when using a pre-existing ObjectBucketClaim. Overrides the default ObjectBucketClaim name if `{objectBucketClaim.create}` is `true` |
 | objectBucketClaim.storageClass  | str  | `ocs-storagecluster-ceph-rgw`   | An optional parameter that defines a storageClass for the ObjectBucketClaim. Only used when `{objectBucketClaim.create}` is `true` |

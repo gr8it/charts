@@ -67,6 +67,11 @@ spec:
                 configMapKeyRef:
                   name: {{ include "app.fullname" . }}-scripts
                   key: env.fileprefix
+            - name: COMPRESS
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "app.fullname" . }}-scripts
+                  key: env.compress
           containers:
           - name: s3backup
             image: {{ .Values.image.awscli }}

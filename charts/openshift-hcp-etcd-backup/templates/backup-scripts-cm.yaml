@@ -11,6 +11,7 @@ data:
   env.fileprefix: etcd-{{ default "snapshot" (regexReplaceAll "[+._]" .Values.clusterName "-") }}
   env.hcpns: {{ include "cluster.namespace" . }}
   env.retention: {{ .Values.retentionDays | quote }}
+  env.compress: {{ (default "false" ( .Values.compressSnapshot )) | quote }}
   init.sh: |
     #!/bin/bash
     set -euo pipefail
@@ -138,20 +139,25 @@ data:
       exit 2
     fi
 
-    # archive
-    if ! gzip --best "$SNAPSHOT_FILE" 2>/dev/shm/out.err 1>/dev/null; then
-      log_messagef /dev/shm/out.err
-      log_message "ERROR: Failed to compress the snapshot file"
-      exit 3
+    if (echo 'yes true enable enabled 1'|grep -wqi "$COMPRESS"); then
+      # archive
+      if ! gzip --best "$SNAPSHOT_FILE" 2>/dev/shm/out.err 1>/dev/null; then
+        log_messagef /dev/shm/out.err
+        log_message "ERROR: Failed to compress the snapshot file"
+        exit 3
+      fi
+
+      if ! gzip --test "${SNAPSHOT_FILE}.gz" 2>/dev/shm/out.err 1>/dev/null; then
+        log_messagef /dev/shm/out.err
+        log_message "ERROR: Failed to test the archive integrity"
+        exit 3
+      fi
+
+      log_message "Snasphot saved to ${SNAPSHOT_FILE}.gz"
+    else
+      log_message "Snasphot saved to ${SNAPSHOT_FILE}"
     fi
 
-    if ! gzip --test "${SNAPSHOT_FILE}.gz" 2>/dev/shm/out.err 1>/dev/null; then
-      log_messagef /dev/shm/out.err
-      log_message "ERROR: Failed to test the archive integrity"
-      exit 3
-    fi
-
-    log_message "Snasphot saved to ${SNAPSHOT_FILE}.gz"
     exit 0
 
   s3upload.sh: |

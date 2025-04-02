@@ -10,6 +10,8 @@ backupSchedule: "0 * * * *"
 retentionDays: 30
 # etcdStatefulSetName: <string> - optional, overrides the default etcd statefulset neme in hcp namespace
 etcdStatefulSetName: etcd
+# compressSnapshot: <bool> - optional, set true to compress etcd snapshots before upload
+compressSnapshot: false
 
 objectBucketClaim:
   # create: <bool> - optional, creates an ObjectBucketClaim for storing etcd backups in {backupNamespace}
