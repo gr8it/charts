@@ -1,16 +1,17 @@
+---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
+  name: {{ include "app.fullname" . }}
   namespace: {{ .Values.defaultNamespace }}
-  name: cronjob-etcd-backup-{{ .Values.clusterName }}
   labels:
-    app.kubernetes.io/name: cronjob-etcd-backup-{{ .Values.clusterName }}
+    {{- include "common.labels" . | nindent 4 }}
 rules:
-  - verbs:
-      - use
-    apiGroups:
-      - security.openshift.io
-    resources:
-      - securitycontextconstraints
-    resourceNames:
-      - privileged
+- verbs:
+  - use
+  apiGroups:
+  - security.openshift.io
+  resources:
+  - securitycontextconstraints
+  resourceNames:
+  - privileged
