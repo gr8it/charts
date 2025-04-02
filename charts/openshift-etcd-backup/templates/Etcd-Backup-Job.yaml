@@ -109,7 +109,7 @@ spec:
                 exit 3
               fi
               if ! RETENTION_DATE=$( date -u --date="${RETENTION} days ago" +"%FT%H:%M:%SZ" ); then
-                echo "Faield to set a retention date. Skipping cleanup."
+                echo "Failed to set a retention date. Skipping cleanup."
                 exit 3
               fi
               if ! aws s3api list-objects-v2 --bucket $BUCKET_NAME --query "Contents[?LastModified<='$RETENTION_DATE'].{Key: Key} | {Objects: [*]}" 2>/dev/null 1>/dev/shm/delete.json; then
@@ -121,7 +121,7 @@ spec:
                 exit 0
               fi
 
-              echo "Removing obejcts older than $RETENTION days:"
+              echo "Removing objects older than $RETENTION days:"
               if ! aws s3api delete-objects --bucket $BUCKET_NAME --delete file:///dev/shm/delete.json --output text ; then
                 echo "Failed to remove objects."
                 exit 3

@@ -11,5 +11,5 @@ metadata:
     helm.sh/resource-policy: keep
 spec:
   generateBucketName: {{ include "obc.name" . }}
-  storageClassName: {{ default "openshift-storage.noobaa.io" .Values.objectBucketClaim.storageClass }}
+  storageClassName: {{ default "ocs-storagecluster-ceph-rgw" .Values.objectBucketClaim.storageClass }}
 {{- end -}}
