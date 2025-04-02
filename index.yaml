@@ -2,7 +2,7 @@ apiVersion: v1
 entries:
   active-directory-auth-provider:
   - apiVersion: v2
-    created: "2025-03-28T11:51:35.169416+01:00"
+    created: "2025-04-02T08:24:06.286923+02:00"
     description: A Chart to enable Rancher Active Directory Auth Provider & Enable
       Global Role Binding for Admin group
     digest: 84f203517cd592dae6d2a821d256df163db935da6e4e932e70037d0d27e93296
@@ -16,7 +16,7 @@ entries:
     version: 1.0.0
   application-logging:
   - apiVersion: v2
-    created: "2025-03-28T11:51:35.169783+01:00"
+    created: "2025-04-02T08:24:06.28726+02:00"
     description: Collection of logs using ClusterFlow from pods from specified application
       namespaces and sending them to specified ClusterOutputs - Elastic (Kibana) and
       SIEM
@@ -29,7 +29,7 @@ entries:
   bind-exporter:
   - apiVersion: v2
     appVersion: v0.8.0
-    created: "2025-03-28T11:51:35.170144+01:00"
+    created: "2025-04-02T08:24:06.287747+02:00"
     description: A Helm chart for BIND DNS exporter
     digest: 92fb888dc92faeb688bef409544555226d8c92166437cf936464059cbf589e83
     name: bind-exporter
@@ -39,7 +39,7 @@ entries:
     version: 1.0.0
   checkpoint-registrator:
   - apiVersion: v2
-    created: "2025-03-28T11:51:35.170485+01:00"
+    created: "2025-04-02T08:24:06.287962+02:00"
     description: Application registers k8s cluster in Checkpoint's infinity portal
     digest: ed73b7f2b305ad5358e102125f6ee621dc472fc73e2eca62c1ff7073f7d39435
     name: checkpoint-registrator
@@ -49,7 +49,7 @@ entries:
     version: 1.2.0
   cilium-egress-gtw-ha-ips:
   - apiVersion: v2
-    created: "2025-03-28T11:51:35.170879+01:00"
+    created: "2025-04-02T08:24:06.288219+02:00"
     description: A Chart to setup per namespace egress IPs using Cilium Enterprise
       IsovalentEgressGatewayPolicies
     digest: cf36e607f0041afb28e120ac3c6f2dc9a0714e6edbdbed3459996ded3a0a1914
@@ -64,7 +64,7 @@ entries:
     version: 1.0.2
   cilium-egress-gtw-ips:
   - apiVersion: v2
-    created: "2025-03-28T11:51:35.171012+01:00"
+    created: "2025-04-02T08:24:06.288367+02:00"
     description: A Chart to setup per namespace egress IP using CiliumEgressGatewayPolicies
     digest: 3ad308ec74a0763fb2a7382a8cdac9d86f80a878fffcb3b0d253ceb5ddbbfe38
     keywords:
@@ -80,7 +80,7 @@ entries:
       catalog.cattle.io/namespace: fleet-default
       catalog.cattle.io/type: cluster-template
     apiVersion: v1
-    created: "2025-03-28T11:51:35.174405+01:00"
+    created: "2025-04-02T08:24:06.292002+02:00"
     description: Cluster template for rke2
     digest: fd9e428ca9fde0fd73c42472acc6c71132395a2f50b99c7f1d2829aca2ada6bc
     name: cluster-template
@@ -91,7 +91,7 @@ entries:
       catalog.cattle.io/namespace: fleet-default
       catalog.cattle.io/type: cluster-template
     apiVersion: v1
-    created: "2025-03-28T11:51:35.173467+01:00"
+    created: "2025-04-02T08:24:06.291288+02:00"
     description: Cluster template for rke2
     digest: 1a67b459d395e28d21f477b37e62c54947909d63b596bb2d1ccd18a5309be4f2
     name: cluster-template
@@ -102,7 +102,7 @@ entries:
       catalog.cattle.io/namespace: fleet-default
       catalog.cattle.io/type: cluster-template
     apiVersion: v1
-    created: "2025-03-28T11:51:35.172666+01:00"
+    created: "2025-04-02T08:24:06.290434+02:00"
     description: Cluster template for rke2
     digest: 3ba9d2783bf39bec55ee38ae5865c4cbee2869c6135bc400d58b8e203674be2e
     name: cluster-template
@@ -113,7 +113,7 @@ entries:
       catalog.cattle.io/namespace: fleet-default
       catalog.cattle.io/type: cluster-template
     apiVersion: v1
-    created: "2025-03-28T11:51:35.171615+01:00"
+    created: "2025-04-02T08:24:06.288981+02:00"
     description: Cluster template for rke2
     digest: 6fd05ea3970fa65eda39e26374840d269194fab5954e38a62b9f832f98ff2865
     name: cluster-template
@@ -124,7 +124,7 @@ entries:
       catalog.cattle.io/namespace: fleet-default
       catalog.cattle.io/type: cluster-template
     apiVersion: v1
-    created: "2025-03-28T11:51:35.176591+01:00"
+    created: "2025-04-02T08:24:06.294159+02:00"
     description: Cluster template for rke2
     digest: 203915b3e9fee2541fa1012124402623fc51343947ede801a56dfaa257e7fcb5
     name: cluster-template
@@ -135,7 +135,7 @@ entries:
       catalog.cattle.io/namespace: fleet-default
       catalog.cattle.io/type: cluster-template
     apiVersion: v1
-    created: "2025-03-28T11:51:35.17596+01:00"
+    created: "2025-04-02T08:24:06.293494+02:00"
     description: Cluster template for rke2
     digest: 74ad9a6b7dc19ff16901fd663d31b035171fa7fe9bc03e069800262dde46f383
     name: cluster-template
@@ -146,7 +146,7 @@ entries:
       catalog.cattle.io/namespace: fleet-default
       catalog.cattle.io/type: cluster-template
     apiVersion: v1
-    created: "2025-03-28T11:51:35.175437+01:00"
+    created: "2025-04-02T08:24:06.292969+02:00"
     description: Cluster template for rke2
     digest: 3a2f2f398f5a77861c4040ca7851bdc6f3dd762defe27c3eb70abb979f09a52b
     name: cluster-template
@@ -157,7 +157,7 @@ entries:
       catalog.cattle.io/namespace: fleet-default
       catalog.cattle.io/type: cluster-template
     apiVersion: v1
-    created: "2025-03-28T11:51:35.174892+01:00"
+    created: "2025-04-02T08:24:06.29248+02:00"
     description: Cluster template for rke2
     digest: bc217f8254e570b59f0253719d5ddab3a8ec0959d9c9b1bd856cedee13ff6c33
     name: cluster-template
@@ -166,8 +166,17 @@ entries:
     version: 1.0.6
   etcd-hcp-backup:
   - apiVersion: v2
+    created: "2025-04-02T08:24:06.294828+02:00"
+    description: A Helm chart for Openshift Hosted Control Plane etcd backup
+    digest: f876d72bc510a2a5f3ef793bef23c8895759515355fd5cf05d0776214617f58d
+    name: etcd-hcp-backup
+    type: application
+    urls:
+    - packaged_charts/etcd-hcp-backup-1.0.0.tgz
+    version: 1.0.0
+  - apiVersion: v2
     appVersion: 1.0.0
-    created: "2025-03-28T11:51:35.17682+01:00"
+    created: "2025-04-02T08:24:06.294592+02:00"
     description: A Helm chart for Openshift Hosted Control Plane etcd backup
     digest: 4afceb45cef35645baaf8b2022caeca54eee1ca7fae45a062c46751f6699726c
     name: etcd-hcp-backup
@@ -177,7 +186,7 @@ entries:
     version: 0.1.0
   f5-cis-lb:
   - apiVersion: v2
-    created: "2025-03-28T11:51:35.177102+01:00"
+    created: "2025-04-02T08:24:06.295313+02:00"
     description: Helm chart creates resources required for F5 CIS to load balance
       KUBE API and Ingress of a cluster
     digest: d75bc1c06eb347078073e84e587681ede831b0838940c7bb7dbf021ff70a242e
@@ -188,7 +197,7 @@ entries:
     version: 1.0.0
   fleet-templating:
   - apiVersion: v1
-    created: "2025-03-28T11:51:35.177299+01:00"
+    created: "2025-04-02T08:24:06.295637+02:00"
     description: Helm chart renders input resources as is. Should be used with fleet
       templating to enable templating in otherwise static manifests
     digest: fb40875ca13cbb02293b3bc33ad1d5837cd3e35da0df92e8bb43dac8415a60c8
@@ -198,7 +207,7 @@ entries:
     version: 1.0.0
   logging-policies:
   - apiVersion: v2
-    created: "2025-03-28T11:51:35.178424+01:00"
+    created: "2025-04-02T08:24:06.29677+02:00"
     description: A Chart to setup ClusterOutput and ClusterFlow objects
     digest: cda2566d06a45a30d1e0f66e087d74d2ba2ca04ad0e3aeb06313ab1c018c3b06
     keywords:
@@ -211,7 +220,7 @@ entries:
     - packaged_charts/logging-policies-1.1.0.tgz
     version: 1.1.0
   - apiVersion: v2
-    created: "2025-03-28T11:51:35.177937+01:00"
+    created: "2025-04-02T08:24:06.296291+02:00"
     description: A Chart to setup ClusterOutput and ClusterFlow objects
     digest: 7eabbff832f6a76b9bd9341d04ac7ef0dd6e5628c5282b6510ec564f16d11f78
     keywords:
@@ -224,7 +233,7 @@ entries:
     - packaged_charts/logging-policies-1.0.12.tgz
     version: 1.0.12
   - apiVersion: v2
-    created: "2025-03-28T11:51:35.178104+01:00"
+    created: "2025-04-02T08:24:06.296465+02:00"
     description: A Chart to setup ClusterOutput and ClusterFlow objects
     digest: e2010c2d6181e927e56c5e77ef9a27f684a90e8b224e33f4734f3fb6cf47685d
     keywords:
@@ -237,7 +246,7 @@ entries:
     - packaged_charts/logging-policies-1.0.2.tgz
     version: 1.0.2
   - apiVersion: v2
-    created: "2025-03-28T11:51:35.177736+01:00"
+    created: "2025-04-02T08:24:06.296079+02:00"
     description: A Chart to setup ClusterOutput and ClusterFlow objects
     digest: e53327e8a7aa058f29c1f4ef4882dc36f1bcfb217dff98e987ee80c360a99119
     keywords:
@@ -250,7 +259,7 @@ entries:
     - packaged_charts/logging-policies-1.0.1.tgz
     version: 1.0.1
   - apiVersion: v2
-    created: "2025-03-28T11:51:35.177534+01:00"
+    created: "2025-04-02T08:24:06.295885+02:00"
     description: A Chart to setup ClusterOutput and ClusterFlow objects
     digest: 0126414c29e0dad17f085aea69f7733705edcbab43d0f04a77bf746250ced361
     keywords:
@@ -265,7 +274,7 @@ entries:
   mongodb-express:
   - apiVersion: v2
     appVersion: 1.0.0-20
-    created: "2025-03-28T11:51:35.179324+01:00"
+    created: "2025-04-02T08:24:06.29743+02:00"
     description: A Chart to install MongoDB Express, uses credentials stored in a
       secret created by MongoDB community operator
     digest: 358ad93f9d748eb8283f738374d18a010843a1575f7b811af1559785755586bf
@@ -279,7 +288,7 @@ entries:
     version: 1.1.1
   - apiVersion: v2
     appVersion: 1.0.0-20
-    created: "2025-03-28T11:51:35.17887+01:00"
+    created: "2025-04-02T08:24:06.297216+02:00"
     description: A Chart to install MongoDB Express, uses credentials stored in a
       secret created by MongoDB community operator
     digest: 4658ba387cd9fc8f6c9c0111623db5dd1a39e1e8ee4597aa435ca74aad030515
@@ -293,7 +302,7 @@ entries:
     version: 1.1.0
   - apiVersion: v2
     appVersion: 1.0.0-20
-    created: "2025-03-28T11:51:35.178656+01:00"
+    created: "2025-04-02T08:24:06.297022+02:00"
     description: A Chart to install MongoDB Express, uses credentials stored in a
       secret created by MongoDB community operator
     digest: 87e188f31ab4852cdc4ed2b443c2ab0ce1b352d01337b011e43d9ef6344f47f7
@@ -307,7 +316,7 @@ entries:
     version: 1.0.0
   openshift-etcd-backup:
   - apiVersion: v2
-    created: "2025-03-28T11:51:35.179626+01:00"
+    created: "2025-04-02T08:24:06.297668+02:00"
     description: A Helm chart for Openshift etcd backup configurations
     digest: f34584947b495b44223fc3b6b867cf638475403ce551309d8efa4f0e29cfccf8
     name: openshift-etcd-backup
@@ -316,7 +325,7 @@ entries:
     version: 1.0.0
   rancher-audit-log-forwarder:
   - apiVersion: v2
-    created: "2025-03-28T11:51:35.179759+01:00"
+    created: "2025-04-02T08:24:06.297794+02:00"
     description: A Chart to enable sending of Rancher API audit log to syslog server
       (SIEM) using RFC5424 format
     digest: a289e1539e9638f94ec78224ead97503df47e647553167a68c49d4ecd92bedcb
@@ -330,7 +339,7 @@ entries:
     version: 1.0.0
   vsphere-csi-secret:
   - apiVersion: v2
-    created: "2025-03-28T11:51:35.179896+01:00"
+    created: "2025-04-02T08:24:06.298056+02:00"
     description: A Chart to setup Vsphere CSI secret
     digest: 696b3fbf25cc363e2dae5b27cf741c6dde34c5be022db3316f1b2cf154a6b020
     keywords:
@@ -341,4 +350,4 @@ entries:
     urls:
     - packaged_charts/vsphere-csi-secret-1.0.2.tgz
     version: 1.0.2
-generated: "2025-03-28T11:51:35.168316+01:00"
+generated: "2025-04-02T08:24:06.286328+02:00"
