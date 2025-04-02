@@ -177,7 +177,7 @@ data:
     }
 
     # check snapshot file
-    SNAPSHOT_FILE=$(find /backup -type f -mmin -30 -name "${FILEPREFIX}*gz" | sort | tail -1)
+    SNAPSHOT_FILE=$(find /backup -type f -mmin -30 -name "${FILEPREFIX}*db*" | sort | tail -1)
     if ! test -r "$SNAPSHOT_FILE"; then
       log_message "ERROR: Failed to locate a valid snapshot file."
       exit 1
