@@ -150,7 +150,7 @@ spec:
               subPath: service-ca.crt
               readOnly: true
             resources:
-              requests: { cpu: "200m", memory: "500Mi" }
+              requests: { cpu: "50m", memory: "100Mi" }
               limits: { cpu: "500m", memory: "1Gi" }
           volumes:
           - name: host
