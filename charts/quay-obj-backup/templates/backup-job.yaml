@@ -1,0 +1,95 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "quay-obj-backup.fullname" . }}
+  namespace: {{ .Values.quayNamespace }}
+  labels:
+    {{- include "common.labels" . | nindent 4 }}
+spec:
+  schedule: {{ .Values.backupSchedule | quote }}
+  concurrencyPolicy: Forbid
+  suspend: false
+  successfulJobsHistoryLimit: 7
+  failedJobsHistoryLimit: 7
+  jobTemplate:
+    metadata:
+      labels:
+        {{- include "common.labels" . | nindent 4 }}
+    spec:
+      template:
+        metadata:
+          labels:
+            {{- include "common.labels" . | nindent 12 }}
+        spec:
+          serviceAccountName: {{ include "quay-obj-backup.fullname" . }}
+          restartPolicy: Never
+          initContainers:
+          - name: backupQuayObjects
+            image: {{ .Values.image.kctl }}
+            command: ["/bin/bash", "/usr/local/bin/quayObjBackup.sh"]
+            volumeMounts:
+            - name: workdir
+              mountPath: /backup
+            - name: scripts
+              mountPath: /usr/local/bin/quayObjBackup.sh
+              subPath: quayObjBackup.sh
+              readOnly: true
+          containers:
+          - name: s3backup
+            image: {{ .Values.image.awscli }}
+            command: ["/bin/bash", "/usr/local/bin/s3upload.sh"]
+            volumeMounts:
+            - name: workdir
+              mountPath: /backup
+            - name: scripts
+              mountPath: /usr/local/bin/s3upload.sh
+              subPath: s3upload.sh
+              readOnly: true
+            {{- if and (hasKey .Values "selfSignedCertificate") (hasKey .Values.selfSignedCertificate "name") (hasKey .Values.selfSignedCertificate "key") }}
+            - name: s3ca
+              mountPath: /etc/ssl/certs/s3ca.crt
+              subPath: {{ .Values.selfSignedCertificate.key }}
+              readOnly: true
+            {{- end }}
+            env:
+            - name: RETENTION
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "quay-obj-backup.fullname" . }}-scripts
+                  key: env.retention
+            - name: FILEPREFIX
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "quay-obj-backup.fullname" . }}-scripts
+                  key: env.fileprefix
+            {{- if and (hasKey .Values "selfSignedCertificate") (hasKey .Values.selfSignedCertificate "name") (hasKey .Values.selfSignedCertificate "key") }}
+            - name: AWS_CA_BUNDLE
+              value: "/etc/ssl/certs/s3ca.crt"
+            {{- end }}
+            envFrom:
+            - secretRef:
+                name: {{ .Values.objectBucketClaim.name }}
+            - configMapRef:
+                name: {{ .Values.objectBucketClaim.name }}
+            resources:
+              requests:
+                memory: "256Mi"
+                cpu: "100m"
+              limits:
+                memory: "512Mi"
+                cpu: "200m"
+            volumes:
+          - name: workdir
+            emptyDir:
+              sizeLimit: 1Gi
+          - name: scripts
+            configMap:
+              name: {{template "quay-obj-backup.fullname" . }}-scripts
+              defaultMode: 0555
+          {{- if and (hasKey .Values "selfSignedCertificate") (hasKey .Values.selfSignedCertificate "name") }}
+          - name: s3ca
+            configMap:
+              name: {{ .Values.selfSignedCertificate.name }}
+          {{- end }}
+            

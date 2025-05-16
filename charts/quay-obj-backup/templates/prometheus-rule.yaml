@@ -1,0 +1,19 @@
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: {{ include "quay-obj-backup.fullname" . }}-rules
+  namespace: {{ .Values.backupNamespace }}
+  labels:
+    {{- include "common.labels" . | nindent 4 }}
+spec:
+  groups:
+  - name: cronjob.rules
+    rules:
+    - alert: QuayBackupJobFailure
+      expr: kube_job_status_failed{namespace="{{ .Values.backupNamespace }}", job_name=~"{{ include "quay-obj-backup.fullname" . }}-.*"} > 0
+      labels:
+        severity: critical
+      annotations:
+        summary: "Quay backup job has failed"
+        description: "Quay backup job for {{ .Values.clusterName }} {{`{{ $labels.namespace }}/{{ $labels.job_name}}`}} has failed."
