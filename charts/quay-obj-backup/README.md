@@ -27,7 +27,7 @@ The solution will gather the configuration, compress it and upload it to S3 buck
 ## Example Deployment
 ```yaml
 # my-values.yaml
-quayNamespace: vault
+quayNamespace: quay
 backupNamespace: apc-backup
 clusterName: ocpdemo
 objectBucketClaim:
