@@ -2,4 +2,4 @@ apiVersion: v2
 name: quay-obj-backup
 description: A Helm chart for backnig up the quay configuration objects
 type: application
-version: 1.0.0
+version: 1.0.1
