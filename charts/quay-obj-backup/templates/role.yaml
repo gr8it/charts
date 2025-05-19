@@ -7,11 +7,11 @@ metadata:
   labels:
     {{- include "common.labels" . | nindent 4 }}
 rules:
-- apiGroups: [""]
-  resources: ["quayregistry"]
+- apiGroups: ["quay.redhat.com"]
+  resources: ["quayregistries"]
   verbs:     ["get", "list"]
 - apiGroups: [""]
-  resources: ["secret"]
+  resources: ["secrets"]
   verbs:     ["get"]
 - apiGroups: [""]
   resources: ["pods/exec"]
@@ -19,3 +19,6 @@ rules:
 - apiGroups: [""]
   resources: ["pods/exec"]
   verbs:     ["create"]
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs:     ["get", "list"]

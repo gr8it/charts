@@ -12,48 +12,48 @@ data:
   env.retention: {{ .Values.retentionDays | quote }}
   quayObjBackup.sh: |
     #!/bin/bash
-    
+
     log_message() {
       local timestamp
       timestamp=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
       echo -e "$timestamp $1"
     }
 
-    if ! qreg=$( kubectl get quayregistry -n $quayNamespace -o jsonpath='{.items[].metadata.name}' 2>/dev/null ); then 
-      log_message "ERROR: no quayregistry deployed in provided namespace $quayNamespace."
+    if ! qreg=$( kubectl get quayregistry -n "$QUAYNAMESPACE" -o jsonpath='{.items[].metadata.name}' 2>/dev/null ); then 
+      log_message "ERROR: no quayregistry deployed in provided namespace $QUAYNAMESPACE."
       exit 1
     fi
 
-    if ! qpod=$( kubectl get pods -n $quayNamespace -l app=quay -o jsonpath='{.items[0].metadata.name}' ); then
-      log_message "ERROR: cannot find any quay pod in namespace $quayNamespace."
+    if ! qpod=$( kubectl get pods -n "$QUAYNAMESPACE" -l app=quay -o jsonpath='{.items[0].metadata.name}' ); then
+      log_message "ERROR: cannot find any quay pod in namespace $QUAYNAMESPACE."
       exit 1
     fi
 
-    kubectl get quayregistry $qreg -n $quayNamespace -o yaml 2>/dev/shm/out.err | yq 'del(.status,.metadata.creationTimestamp,.metadata.finalizers,.metadata.resourceVersion,.metadata.uid,.metadata.generation)' > quay-registry.yaml
+    kubectl get quayregistry $qreg -n "$QUAYNAMESPACE" -o yaml 2>/dev/shm/out.err | yq 'del(.status,.metadata.creationTimestamp,.metadata.finalizers,.metadata.resourceVersion,.metadata.uid,.metadata.generation)' > /backup/quay-registry.yaml
     if [ -s /dev/shm/out.err ]; then
       log_message "ERROR: $(cat /dev/shm/out.err)"
       exit 1
     fi
 
-    kubectl get secret -n $quayNamespace ${qreg}-quay-registry-managed-secret-keys -o yaml 2>/dev/shm/out.err | yq 'del(.metadata.ownerReferences)' > managed-secret-keys.yaml
+    kubectl get secret -n "$QUAYNAMESPACE" ${qreg}-quay-registry-managed-secret-keys -o yaml 2>/dev/shm/out.err | yq 'del(.metadata.ownerReferences)' > /backup/managed-secret-keys.yaml
     if [ -s /dev/shm/out.err ]; then
       log_message "ERROR: $(cat /dev/shm/out.err)"
       exit 1
     fi
 
-    kubectl get secret -n $quayNamespace $(kubectl get quayregistry $qreg -n $quayNamespace -o jsonpath='{.spec.configBundleSecret}') -o yaml 2>/dev/shm/out.err > config-bundle.yaml
+    kubectl get secret -n "$QUAYNAMESPACE" $(kubectl get quayregistry $qreg -n "$QUAYNAMESPACE" -o jsonpath='{.spec.configBundleSecret}') -o yaml 2>/dev/shm/out.err > /backup/config-bundle.yaml
     if [ -s /dev/shm/out.err ]; then
       log_message "ERROR: $(cat /dev/shm/out.err)"
       exit 1
     fi
 
-    kubectl exec -it $qpod -n $quayNamespace -- cat /conf/stack/config.yaml 2>/dev/shm/out.err > quay-config.yaml
+    kubectl exec $qpod -n "$QUAYNAMESPACE" -- cat /conf/stack/config.yaml 2>/dev/shm/out.err > /backup/quay-config.yaml
     if [ -s /dev/shm/out.err ]; then
       log_message "ERROR: $(cat /dev/shm/out.err)"
       exit 1
     fi
 
-    if ! tar -czf /backup/quayObjBackup-$(date +%Y%m%d%H%M%S).tgz *yaml; then 
+    if ! tar -czf /backup/quayObjBackup-$(date +%Y%m%d%H%M%S).tgz /backup/*yaml; then 
       log_message "ERROR: Cannot create backup archive."
       exit 1
     fi
@@ -118,6 +118,9 @@ data:
       log_message "ERROR: Failed to generate a list of objects to delete"
       exit 1
     fi
+
+    log_message "INFO: listing content of backup bucket $BUCKET_NAME"
+    aws s3api list-objects-v2 --bucket $BUCKET_NAME
 
     if grep -qE '"Objects":\s*\[\s*\]' /backup/delete.json; then
       log_message "No objects older than $RETENTION days found - skipping cleanup."

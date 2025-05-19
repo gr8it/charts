@@ -3,7 +3,7 @@ apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: {{ include "quay-obj-backup.fullname" . }}
-  namespace: {{ .Values.quayNamespace }}
+  namespace: {{ .Values.backupNamespace }}
   labels:
     {{- include "common.labels" . | nindent 4 }}
 spec:
@@ -15,8 +15,9 @@ spec:
   jobTemplate:
     metadata:
       labels:
-        {{- include "common.labels" . | nindent 4 }}
+        {{- include "common.labels" . | nindent 8 }}
     spec:
+      backoffLimit: 0
       template:
         metadata:
           labels:
@@ -25,7 +26,7 @@ spec:
           serviceAccountName: {{ include "quay-obj-backup.fullname" . }}
           restartPolicy: Never
           initContainers:
-          - name: backupQuayObjects
+          - name: backup-quay-objects
             image: {{ .Values.image.kctl }}
             command: ["/bin/bash", "/usr/local/bin/quayObjBackup.sh"]
             volumeMounts:
@@ -35,6 +36,12 @@ spec:
               mountPath: /usr/local/bin/quayObjBackup.sh
               subPath: quayObjBackup.sh
               readOnly: true
+            env:
+            - name: QUAYNAMESPACE
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "quay-obj-backup.fullname" . }}-scripts
+                  key: env.quayNamespace
           containers:
           - name: s3backup
             image: {{ .Values.image.awscli }}
@@ -74,12 +81,12 @@ spec:
                 name: {{ .Values.objectBucketClaim.name }}
             resources:
               requests:
-                memory: "256Mi"
-                cpu: "100m"
+                memory: {{ .Values.resources.requests.memory | quote }}
+                cpu: {{ .Values.resources.requests.cpu | quote }}
               limits:
-                memory: "512Mi"
-                cpu: "200m"
-            volumes:
+                memory: {{ .Values.resources.limits.memory | quote }}
+                cpu: {{ .Values.resources.limits.cpu | quote }}
+          volumes:
           - name: workdir
             emptyDir:
               sizeLimit: 1Gi
