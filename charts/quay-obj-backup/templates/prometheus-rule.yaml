@@ -13,7 +13,7 @@ spec:
     - alert: QuayBackupJobFailure
       expr: kube_job_status_failed{namespace="{{ .Values.backupNamespace }}", job_name=~"{{ include "quay-obj-backup.fullname" . }}-.*"} > 0
       labels:
-        severity: critical
+        severity: error
       annotations:
         summary: "Quay backup job has failed"
         description: "Quay backup job for {{ .Values.clusterName }} {{`{{ $labels.namespace }}/{{ $labels.job_name}}`}} has failed."

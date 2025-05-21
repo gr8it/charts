@@ -5,6 +5,9 @@ The solution will gather the configuration, compress it and upload it to S3 buck
 
 ## Chart Variables
 
+> [!IMPORTANT]
+> ObjectBucketClaim (backup bucket) is required to be prepared before the HC deployment.  
+> The backup bucket is placed in application bucket group and is placed in backup namespace.  
 > [!NOTE]  
 > Each variable without a default value is mandatory  
 
@@ -31,7 +34,7 @@ quayNamespace: quay
 backupNamespace: apc-backup
 clusterName: ocpdemo
 objectBucketClaim:
-  name: quay-obj-backup-bucket
+  name: app-hub01-quay-backup
 ```
 
 ```sh
