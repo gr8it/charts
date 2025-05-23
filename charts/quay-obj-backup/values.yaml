@@ -1,0 +1,37 @@
+# quay namespace: <string> - mandatory, namespace where registry is placed
+quayNamespace: ~
+# backupNamespace: <string> - mandatory, namespace for backup job deployment
+backupNamespace: ~
+# clusterName: <string> - mandatory, name of the hcp cluster
+clusterName: ~
+# retentionDays: <int> - specifies the number of days to retain old backups during the cleanup phase
+retentionDays: 30
+# Images used for backup and s3upload of the bkp
+image:
+  kctl: bitnami/kubectl:1.31.4
+  awscli: amazon/aws-cli:2.24.27
+  
+# Set this to reference private CA for accessing s3 storage endpoint via local svc url
+selfSignedCertificate:
+  name: openshift-service-ca.crt
+  key: service-ca.crt
+
+objectBucketClaim:
+  # name: <string> - mandatory
+  name: ~
+
+# This is to override the chart name.
+nameOverride: ""
+fullnameOverride: ""
+
+# backupSchedule, once per week
+backupSchedule: "50 23 * * 6"
+
+# Resource limits/requests definition
+resources:
+  limits:
+    cpu: 200m
+    memory: 256Mi
+  requests:
+    cpu: 50m
+    memory: 128Mi
